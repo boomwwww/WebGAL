@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import './styles/index.css';
 
-import '../index.scss';
+import './styles/app-index.scss';
 import App from '../App';
 import '../assets/style/animation.scss';
 import 'modern-css-reset/dist/reset.min.css';
