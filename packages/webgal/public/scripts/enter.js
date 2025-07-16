@@ -48,10 +48,10 @@ function enter() {
   const title = document.getElementById('Title_enter_page');
   setTimeout(() => {
     if (title) title.style.opacity = '0';
-  }, 500); //500ms后开始降低落地页透明度
+  }, 500); // 500ms后开始降低落地页透明度
   if (!isIOS && title) {
-    title.style.pointerEvents = 'none'; //落地页不再响应点击
-    title.style.background = 'linear-gradient( #a1c4fd 0%, #c2e9fb 100%)'; //改变标题渐变效果
+    title.style.pointerEvents = 'none'; // 落地页不再响应点击
+    title.style.background = 'linear-gradient( #a1c4fd 0%, #c2e9fb 100%)'; // 改变标题渐变效果
   }
   setTimeout(() => {
     if (title) {

@@ -11,6 +11,7 @@ import { setEnableAppreciationMode, setVisibility } from '@/store/GUIReducer';
 
 declare global {
   interface Window {
+    enterPromise?: Function;
     renderPromise?: Function;
   }
 }
