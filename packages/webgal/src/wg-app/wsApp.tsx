@@ -7,6 +7,9 @@ import { JSX, ReactPortal } from 'react';
 
 import { main } from './main';
 
+import { webgalStore } from '../store/store';
+import { Provider } from 'react-redux';
+
 const init = async (selctor: string) => {
   function WgApp() {
     // windowsize
@@ -268,6 +271,7 @@ const init = async (selctor: string) => {
           </div>
         </div>
         {/* <div id="panic-overlay">紧急回避</div> */}
+        {topComponents}
         <div id="root" />
         {(() => {
           loadLive2D();
@@ -279,7 +283,9 @@ const init = async (selctor: string) => {
   // eslint-disable-next-line react/no-deprecated
   ReactDOM.render(
     <React.StrictMode>
-      <WgApp />
+      <Provider store={webgalStore}>
+        <WgApp />
+      </Provider>
     </React.StrictMode>,
     document.querySelector(selctor),
   );
@@ -287,14 +293,19 @@ const init = async (selctor: string) => {
   main(pluginComponents);
 };
 
+let topComponents: (JSX.Element | ReactPortal)[] = [];
 let pluginComponents: (JSX.Element | ReactPortal)[] = [];
 const addComponents = (components: (JSX.Element | ReactPortal)[]) => {
   pluginComponents = [...pluginComponents, ...components];
+};
+const addTopComponents = (components: (JSX.Element | ReactPortal)[]) => {
+  topComponents = [...topComponents, ...components];
 };
 
 const wgAppObj = {
   init,
   addComponents,
+  addTopComponents,
 };
 
 export { wgAppObj };

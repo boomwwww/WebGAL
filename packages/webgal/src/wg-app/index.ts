@@ -8,6 +8,9 @@ const app = {
   addComponents(components: (JSX.Element | ReactPortal)[]) {
     wgAppObj.addComponents(components);
   },
+  addTopComponents(components: (JSX.Element | ReactPortal)[]) {
+    wgAppObj.addTopComponents(components);
+  },
   use(plugin: any, options?: any) {
     console.log(`use ${plugin.name}`);
     plugin.install(app, options ?? {});

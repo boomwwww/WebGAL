@@ -27,7 +27,7 @@ function App({ components }: AppProps) {
   // Provider用于对各组件提供状态
   return (
     <div className="App">
-      {/* {components} */}
+      {components}
       <Translation />
       <Stage />
       <BottomControlPanel />

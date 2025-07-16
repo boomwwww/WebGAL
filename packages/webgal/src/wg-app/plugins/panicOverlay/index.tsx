@@ -6,7 +6,7 @@ const panicOverlay = ({ key }: { key: string[] }): WgPlugin => {
     install(app: WgApp, useOptions: any) {
       const defaults = { key: ['Escape'] };
       const config = { ...defaults, key, ...useOptions };
-      app.addComponents([<PanicOverlay key="panic-overlay" />]);
+      app.addTopComponents([<PanicOverlay key="panic-overlay" />]);
     },
   };
 };
