@@ -21,4 +21,5 @@ export const PanicOverlay = () => {
     <div className={showOverlay ? styles.panic_overlay_main : ''}>{showOverlay && <PanicYoozle />}</div>,
     document.querySelector('div#panic-overlay')!,
   );
+  // return <div className={showOverlay ? styles.panic_overlay_main : ''}>{showOverlay && <PanicYoozle />}</div>;
 };

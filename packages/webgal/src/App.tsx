@@ -7,13 +7,19 @@ import { Extra } from '@/UI/Extra/Extra';
 import GlobalDialog from '@/UI/GlobalDialog/GlobalDialog';
 import Logo from '@/UI/Logo/Logo';
 import Menu from '@/UI/Menu/Menu';
-import { PanicOverlay } from '@/UI/PanicOverlay/PanicOverlay';
+import { PanicOverlay } from '@/wg-app/plugins/panicOverlay/PanicOverlay';
 import Title from '@/UI/Title/Title';
 import Translation from '@/UI/Translation/Translation';
 import { useEffect } from 'react';
 import { initializeScript } from './Core/initializeScript';
 
-function App() {
+import { JSX, ReactPortal } from 'react';
+
+interface AppProps {
+  components: (JSX.Element | ReactPortal)[];
+}
+
+function App({ components }: AppProps) {
   useEffect(() => {
     initializeScript();
   }, []);
@@ -21,6 +27,7 @@ function App() {
   // Provider用于对各组件提供状态
   return (
     <div className="App">
+      {/* {components} */}
       <Translation />
       <Stage />
       <BottomControlPanel />
@@ -31,7 +38,7 @@ function App() {
       <Extra />
       <Menu />
       <GlobalDialog />
-      <PanicOverlay />
+      {/* <PanicOverlay /> */}
       <DevPanel />
     </div>
   );

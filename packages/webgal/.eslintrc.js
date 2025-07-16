@@ -28,5 +28,6 @@ module.exports = {
         allowExpressions: true,
       },
     ],
+    'no-undef': 0,
   },
 };
