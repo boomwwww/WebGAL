@@ -1,3 +1,11 @@
+此分支用于探索一种更加友好的项目组织结构
+
+---
+
+以下是原仓库的 README 文件
+
+---
+
 ![WebGAL Slogan](https://github.com/OpenWebGAL/WebGAL/assets/30483415/ede38a39-d054-4fee-a3e9-fc5e764f358d)
 
 ### **[English Version](/README_EN.md)** | **[日本語版](/README_JP.md)** | **[한국어](/README_KO.md)** | **[Français](/README_FR.md)**
