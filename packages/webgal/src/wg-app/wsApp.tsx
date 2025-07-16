@@ -3,8 +3,252 @@ import ReactDOM from 'react-dom';
 
 import './styles/index.css';
 
+import '../index.scss';
+import App from '../App';
+import '../assets/style/animation.scss';
+import 'modern-css-reset/dist/reset.min.css';
+
+/**
+ * i18n
+ */
+import i18n from 'i18next';
+import { initReactI18next, Trans } from 'react-i18next';
+import { defaultLanguage, i18nTranslationResources, language } from '../config/language';
+import { webgalStore } from '../store/store';
+import { Provider } from 'react-redux';
+
 const wgAppInit = async (selctor: string) => {
   function WgApp() {
+    // windowsize
+
+    /**
+     * 在窗口大小改变时进行强制缩放
+     */
+    const ua = navigator.userAgent;
+    const isIOSDevice = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+    function resize() {
+      const targetHeight = 1440;
+      const targetWidth = 2560;
+
+      const h = window.innerHeight; // 窗口高度
+      const w = window.innerWidth; // 窗口宽度
+      const zoomH = h / targetHeight; // 以窗口高度为基准的变换比
+      const zoomW = w / targetWidth; // 以窗口宽度为基准的变换比
+      const zoomH2 = w / targetHeight; // 竖屏时以窗口高度为基础的变换比
+      const zoomW2 = h / targetWidth; // 竖屏时以窗口宽度为基础的变换比
+      let mh = (targetHeight - h) / 2; // y轴移动距离
+      let mw = (targetWidth - w) / 2; // x轴移动距离
+      let mh2os = targetWidth / 2 - w / 2; // 竖屏时 y轴移动距离
+      let mw2os = targetHeight / 2 - h / 2; // 竖屏时 x轴移动距离
+      let transform = '';
+      let ebgTransform = '';
+      const root = document.getElementById('root'); // 获取根元素
+      const title = document.getElementById('Title_enter_page');
+      const ebg = document.getElementById('ebg');
+      const elements = [root, title];
+      if (w > h) {
+        const ebg = document.getElementById('ebg');
+        if (ebg) {
+          ebg.style.height = `100vh`;
+          ebg.style.width = `100vw`;
+          ebgTransform = '';
+        }
+        mw = -mw;
+        mh = -mh;
+        if (w * (9 / 16) >= h) {
+          transform = `translate(${mw}px, ${mh}px) scale(${zoomH},${zoomH})`;
+        }
+        if (w * (9 / 16) < h) {
+          transform = `translate(${mw}px, ${mh}px) scale(${zoomW},${zoomW})`;
+        }
+      } else {
+        /**
+         * 旋转
+         */
+        if (ebg) {
+          ebg.style.height = `${targetHeight}px`;
+          ebg.style.width = `${targetWidth}px`;
+        }
+        mw2os = -mw2os;
+        if (h * (9 / 16) >= w) {
+          ebgTransform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomH2 * 1.75},${zoomH2 * 1.75})`;
+          transform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomH2},${zoomH2})`;
+        }
+        if (h * (9 / 16) < w) {
+          ebgTransform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomW2 * 1.75},${zoomW2 * 1.75})`;
+          transform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomW2},${zoomW2})`;
+        }
+        /**
+         * iOS 不强制旋转
+         */
+        if (isIOSDevice) {
+          const zoomWi = w / targetWidth;
+          transform = `translate(${-mw}px, ${-mh}px) scale(${zoomWi},${zoomWi})`;
+        }
+      }
+      if (ebg) {
+        ebg.style.transform = ebgTransform;
+      }
+      for (const element of elements) {
+        if (element) {
+          element.style.transform = transform;
+        }
+      }
+    }
+
+    if (!isIOSDevice) {
+      // 创建一个新的 meta 标签
+      const meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no';
+      // 将该标签添加到 head 中
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      resize();
+      window.onload = resize;
+      window.onresize = resize;
+      // 监听键盘 F11 事件，全屏时触发页面调整
+      document.onkeydown = function (event) {
+        const e = event;
+        if (e && e.key === 'F11') {
+          setTimeout(() => {
+            resize();
+          }, 100);
+        }
+      };
+    } else {
+      // ios
+      const meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, initial-scale=0.22, minimum-scale=0.01, maximum-scale=1';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.textContent = '* { font-synthesis: none !important; }';
+      document.head.appendChild(style);
+    }
+
+    // serviceworker
+
+    /**
+     * 注册 Service Worker
+     */
+    const u = navigator.userAgent;
+    const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // 判断是否是 iOS终端
+    if ('serviceWorker' in navigator && !isIOS) {
+      navigator.serviceWorker
+        .register('./webgal-serviceworker.js')
+        .then(function (reg) {
+          // registration worked
+          console.log('Registration succeeded. Scope is ' + reg.scope);
+        })
+        .catch(function (error) {
+          // registration failed
+          console.log('Registration failed with ' + error);
+        });
+    }
+
+    // loadlive2d
+
+    function loadScript(url: string) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = () => resolve(`Loaded: ${url}`);
+        // script.onerror = (error) => reject(`Failed to load: ${url}`);
+        script.onerror = (error) => reject(new Error(`Failed to load: ${url}`));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function loadLive2D() {
+      try {
+        // 尝试加载 Live2D SDK，
+        // 只有在用户自行取得 Live2D 许可并放到下面的目录时，这里才可能加载成功。
+        // 本项目 **没有** 引入 Live2D SDK
+        // Attempt to load the Live2D SDK.
+        // This will only succeed if the user has obtained a Live2D license and placed it in the directory below.
+        // This project **does not** include the Live2D SDK.
+        // Live2D SDK の読み込みを試みます。
+        // ユーザーが Live2D ライセンスを取得し、以下のディレクトリに配置した場合のみ、読み込みが成功します。
+        // このプロジェクトには Live2D SDK は**含まれていません**
+        await loadScript('lib/live2d.min.js');
+        await loadScript('lib/live2dcubismcore.min.js');
+        console.log('Both Live2D scripts loaded successfully.');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    // enter
+
+    let enterPromise = new Promise((res) => {
+      window.enterPromise = res;
+    });
+    let renderPromise = new Promise((res) => {
+      window.renderPromise = res;
+    });
+    /**
+     * 将播放bgm的事件发送出去
+     */
+    Promise.all([enterPromise, renderPromise]).then(() => {
+      const event = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+      });
+      const target = document.getElementById('enter_game_target');
+      if (target) {
+        target.dispatchEvent(event);
+      }
+      if (event) {
+        const logo = document.getElementById('logo_target');
+        if (logo) {
+          logo.style.display = 'contents';
+        }
+      }
+    });
+
+    function jump(event: React.MouseEvent<HTMLAnchorElement>, url: string) {
+      // 获取点击事件，阻止点击事件冒泡触发 `enter` 事件
+      event.stopPropagation();
+      // window.location = url;
+    }
+
+    /**
+     * 点击屏幕，进入引擎主界面
+     */
+    function enter() {
+      const bgContainer = document.getElementById('Title_bg_container');
+      if (bgContainer) {
+        bgContainer.style.opacity = '0'; // 调整标题背景的透明度
+      }
+      const enterText = document.getElementById('Title_enter_text');
+      if (enterText) {
+        enterText.style.opacity = '0'; // 调整标题文字的透明度
+      }
+      const whiteContainer = document.getElementById('Title_white_container');
+      setTimeout(() => {
+        if (whiteContainer) {
+          whiteContainer.style.opacity = '1';
+        }
+      }, 50); // 在50ms后开始显示白色渐变
+      const title = document.getElementById('Title_enter_page');
+      setTimeout(() => {
+        if (title) title.style.opacity = '0';
+      }, 500); // 500ms后开始降低落地页透明度
+      if (!isIOS && title) {
+        title.style.pointerEvents = 'none'; // 落地页不再响应点击
+        title.style.background = 'linear-gradient( #a1c4fd 0%, #c2e9fb 100%)'; // 改变标题渐变效果
+      }
+      setTimeout(() => {
+        if (title) {
+          title.style.display = 'none';
+        }
+      }, 2000); // 将落地页设置为不显示
+      if (window.enterPromise) {
+        window.enterPromise();
+      }
+      delete window.enterPromise;
+    }
     return (
       <>
         {/* 快速显示落地页，让用户感知不到加载的过程 */}
@@ -34,7 +278,34 @@ const wgAppInit = async (selctor: string) => {
           </div>
         </div>
         <div id="panic-overlay">{/* 紧急回避 */}</div>
-        <div id="root" />
+
+        {(() => {
+          i18n
+            .use(initReactI18next) // passes i18n down to react-i18next
+            .init({
+              // the translations
+              // (tip move them in a JSON file and import them,
+              // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
+              resources: i18nTranslationResources || {},
+              lng: language[defaultLanguage] || 'zhCn', // if you're using a language detector, do not define the lng option
+              fallbackLng: 'zhCn',
+
+              interpolation: {
+                escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+              },
+            })
+            .then(() => console.log('WebGAL i18n Ready!'));
+          return (
+            <Trans>
+              <Provider store={webgalStore}>
+                <App />
+              </Provider>
+            </Trans>
+          );
+        })()}
+        {(() => {
+          loadLive2D();
+        })()}
       </>
     );
   }
@@ -46,247 +317,6 @@ const wgAppInit = async (selctor: string) => {
     </React.StrictMode>,
     document.querySelector(selctor),
   );
-
-  // windowsize
-
-  /**
-   * 在窗口大小改变时进行强制缩放
-   */
-  const ua = navigator.userAgent;
-  const isIOSDevice = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-  function resize() {
-    const targetHeight = 1440;
-    const targetWidth = 2560;
-
-    const h = window.innerHeight; // 窗口高度
-    const w = window.innerWidth; // 窗口宽度
-    const zoomH = h / targetHeight; // 以窗口高度为基准的变换比
-    const zoomW = w / targetWidth; // 以窗口宽度为基准的变换比
-    const zoomH2 = w / targetHeight; // 竖屏时以窗口高度为基础的变换比
-    const zoomW2 = h / targetWidth; // 竖屏时以窗口宽度为基础的变换比
-    let mh = (targetHeight - h) / 2; // y轴移动距离
-    let mw = (targetWidth - w) / 2; // x轴移动距离
-    let mh2os = targetWidth / 2 - w / 2; // 竖屏时 y轴移动距离
-    let mw2os = targetHeight / 2 - h / 2; // 竖屏时 x轴移动距离
-    let transform = '';
-    let ebgTransform = '';
-    const root = document.getElementById('root'); // 获取根元素
-    const title = document.getElementById('Title_enter_page');
-    const ebg = document.getElementById('ebg');
-    const elements = [root, title];
-    if (w > h) {
-      const ebg = document.getElementById('ebg');
-      if (ebg) {
-        ebg.style.height = `100vh`;
-        ebg.style.width = `100vw`;
-        ebgTransform = '';
-      }
-      mw = -mw;
-      mh = -mh;
-      if (w * (9 / 16) >= h) {
-        transform = `translate(${mw}px, ${mh}px) scale(${zoomH},${zoomH})`;
-      }
-      if (w * (9 / 16) < h) {
-        transform = `translate(${mw}px, ${mh}px) scale(${zoomW},${zoomW})`;
-      }
-    } else {
-      /**
-       * 旋转
-       */
-      if (ebg) {
-        ebg.style.height = `${targetHeight}px`;
-        ebg.style.width = `${targetWidth}px`;
-      }
-      mw2os = -mw2os;
-      if (h * (9 / 16) >= w) {
-        ebgTransform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomH2 * 1.75},${zoomH2 * 1.75})`;
-        transform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomH2},${zoomH2})`;
-      }
-      if (h * (9 / 16) < w) {
-        ebgTransform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomW2 * 1.75},${zoomW2 * 1.75})`;
-        transform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomW2},${zoomW2})`;
-      }
-      /**
-       * iOS 不强制旋转
-       */
-      if (isIOSDevice) {
-        const zoomWi = w / targetWidth;
-        transform = `translate(${-mw}px, ${-mh}px) scale(${zoomWi},${zoomWi})`;
-      }
-    }
-    if (ebg) {
-      ebg.style.transform = ebgTransform;
-    }
-    for (const element of elements) {
-      if (element) {
-        element.style.transform = transform;
-      }
-    }
-  }
-
-  if (!isIOSDevice) {
-    // 创建一个新的 meta 标签
-    const meta = document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no';
-    // 将该标签添加到 head 中
-    document.getElementsByTagName('head')[0].appendChild(meta);
-    resize();
-    window.onload = resize;
-    window.onresize = resize;
-    // 监听键盘 F11 事件，全屏时触发页面调整
-    document.onkeydown = function (event) {
-      const e = event;
-      if (e && e.key === 'F11') {
-        setTimeout(() => {
-          resize();
-        }, 100);
-      }
-    };
-  } else {
-    // ios
-    const meta = document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=0.22, minimum-scale=0.01, maximum-scale=1';
-    document.getElementsByTagName('head')[0].appendChild(meta);
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.textContent = '* { font-synthesis: none !important; }';
-    document.head.appendChild(style);
-  }
-
-  // windowsize 以上
-
-  // serviceworker
-
-  /**
-   * 注册 Service Worker
-   */
-  const u = navigator.userAgent;
-  const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // 判断是否是 iOS终端
-  if ('serviceWorker' in navigator && !isIOS) {
-    navigator.serviceWorker
-      .register('./webgal-serviceworker.js')
-      .then(function (reg) {
-        // registration worked
-        console.log('Registration succeeded. Scope is ' + reg.scope);
-      })
-      .catch(function (error) {
-        // registration failed
-        console.log('Registration failed with ' + error);
-      });
-  }
-
-  // serviceworker 以上
-
-  await import('../main.tsx');
-
-  // loadlive2d
-
-  function loadScript(url: string) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = url;
-      script.onload = () => resolve(`Loaded: ${url}`);
-      // script.onerror = (error) => reject(`Failed to load: ${url}`);
-      script.onerror = (error) => reject(new Error(`Failed to load: ${url}`));
-      document.head.appendChild(script);
-    });
-  }
-
-  async function loadLive2D() {
-    try {
-      // 尝试加载 Live2D SDK，
-      // 只有在用户自行取得 Live2D 许可并放到下面的目录时，这里才可能加载成功。
-      // 本项目 **没有** 引入 Live2D SDK
-      // Attempt to load the Live2D SDK.
-      // This will only succeed if the user has obtained a Live2D license and placed it in the directory below.
-      // This project **does not** include the Live2D SDK.
-      // Live2D SDK の読み込みを試みます。
-      // ユーザーが Live2D ライセンスを取得し、以下のディレクトリに配置した場合のみ、読み込みが成功します。
-      // このプロジェクトには Live2D SDK は**含まれていません**
-      await loadScript('lib/live2d.min.js');
-      await loadScript('lib/live2dcubismcore.min.js');
-      console.log('Both Live2D scripts loaded successfully.');
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  loadLive2D();
-
-  // loadlive2d 以上
-
-  // enter
-
-  let enterPromise = new Promise((res) => {
-    window.enterPromise = res;
-  });
-  let renderPromise = new Promise((res) => {
-    window.renderPromise = res;
-  });
-  /**
-   * 将播放bgm的事件发送出去
-   */
-  Promise.all([enterPromise, renderPromise]).then(() => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    const target = document.getElementById('enter_game_target');
-    if (target) {
-      target.dispatchEvent(event);
-    }
-    if (event) {
-      const logo = document.getElementById('logo_target');
-      if (logo) {
-        logo.style.display = 'contents';
-      }
-    }
-  });
-
-  function jump(event: React.MouseEvent<HTMLAnchorElement>, url: string) {
-    // 获取点击事件，阻止点击事件冒泡触发 `enter` 事件
-    event.stopPropagation();
-    // window.location = url;
-  }
-
-  /**
-   * 点击屏幕，进入引擎主界面
-   */
-  function enter() {
-    const bgContainer = document.getElementById('Title_bg_container');
-    if (bgContainer) {
-      bgContainer.style.opacity = '0'; // 调整标题背景的透明度
-    }
-    const enterText = document.getElementById('Title_enter_text');
-    if (enterText) {
-      enterText.style.opacity = '0'; // 调整标题文字的透明度
-    }
-    const whiteContainer = document.getElementById('Title_white_container');
-    setTimeout(() => {
-      if (whiteContainer) {
-        whiteContainer.style.opacity = '1';
-      }
-    }, 50); // 在50ms后开始显示白色渐变
-    const title = document.getElementById('Title_enter_page');
-    setTimeout(() => {
-      if (title) title.style.opacity = '0';
-    }, 500); // 500ms后开始降低落地页透明度
-    if (!isIOS && title) {
-      title.style.pointerEvents = 'none'; // 落地页不再响应点击
-      title.style.background = 'linear-gradient( #a1c4fd 0%, #c2e9fb 100%)'; // 改变标题渐变效果
-    }
-    setTimeout(() => {
-      if (title) {
-        title.style.display = 'none';
-      }
-    }, 2000); // 将落地页设置为不显示
-    if (window.enterPromise) {
-      window.enterPromise();
-    }
-    delete window.enterPromise;
-  }
 };
 
 export { wgAppInit };
