@@ -9,40 +9,7 @@
   </head>
 
   <body>
-    <!--快速显示落地页，让用户感知不到加载的过程-->
-    <div id="ebg"></div>
-    <div id="Title_enter_page" onclick="enter()">
-      <!--    落地页背景-->
-      <div id="Title_bg_container"></div>
-      <!--    点击后的白色渐变-->
-      <div id="Title_white_container"></div>
-      <!--    落地页文字-->
-      <div id="Title_enter_text">
-        <div class="toCenter">
-          <div class="StartButton">PRESS THE SCREEN TO START</div>
-        </div>
-        <div class="link-to-github">
-          <div>
-            Powered by
-            <a
-              href="https://github.com/OpenWebGAL/WebGAL"
-              onclick="jump(event, 'https://github.com/OpenWebGAL/WebGAL')"
-            >
-              WebGAL
-            </a>
-            Framework
-          </div>
-        </div>
-      </div>
-    </div>
-    <webgal></webgal>
-    <div id="panic-overlay"><!-- 紧急回避 --></div>
-    <div id="root"></div>
-    <!-- <script src="scripts/windowsize.js"></script>
-    <script src="scripts/serviceworker.js"></script>
-    <script type="module" src="./src/main.tsx"></script>
-    <script src="scripts/loadlive2d.js"></script>
-    <script src="scripts/enter.js"></script> -->
+    <div id="ws-app"></div>
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>

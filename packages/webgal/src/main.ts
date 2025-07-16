@@ -1,4 +1,4 @@
-import './styles/index.css';
+import './ws-app/styles/index.css';
 
 function loadScript(url: string, type?: string) {
   return new Promise((resolve, reject) => {
