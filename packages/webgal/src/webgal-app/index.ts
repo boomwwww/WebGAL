@@ -1,14 +1,14 @@
-import { JSX, ReactPortal } from 'react';
+import { JSX, FC, ReactPortal } from 'react';
 
 import { webgalAppObj } from './webgalApp';
 
 export type WebgalApp = typeof app;
 
 const app = {
-  addComponents(components: (JSX.Element | ReactPortal)[]) {
+  addComponents(components: (JSX.Element | FC | ReactPortal)[]) {
     webgalAppObj.addComponents(components);
   },
-  addTopComponents(components: (JSX.Element | ReactPortal)[]) {
+  addTopComponents(components: (JSX.Element | FC | ReactPortal)[]) {
     webgalAppObj.addTopComponents(components);
   },
   addPluginHotkeyHook(pluginHotkeyHook: () => void) {
