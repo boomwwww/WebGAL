@@ -46,6 +46,8 @@ export const keyboard: Keyboard | undefined = 'keyboard' in navigator && (naviga
 
 // export function useHotkey(opt?: HotKeyType) {
 export function useHotkey() {
+  console.log(`--------------useHotkey--------------`);
+
   useMouseRightClickHotKey();
   useMouseWheel();
   useSkip();
@@ -99,20 +101,12 @@ export function useMouseRightClickHotKey() {
 
 let wheelTimeout = setTimeout(() => {}, 0); // 初始化，什么也不干
 
-function useGetIsPanicOverlayOpen<T = any>(GUIStore: T & any): () => boolean {
-  return useCallback(() => {
-    return GUIStore.current.showPanicOverlay;
-  }, [GUIStore]);
-}
-
 const mouseWheelDisabledConditions: (() => boolean)[] = [];
-
-export const addMouseWheelDisabledCondition = (condition: () => boolean) => {
-  mouseWheelDisabledConditions.push(condition);
-};
-
 const useGetIsMouseWheelDisabled = () => {
   return () => mouseWheelDisabledConditions.some((condition) => condition());
+};
+export const addMouseWheelDisabledCondition = (condition: () => boolean) => {
+  mouseWheelDisabledConditions.push(condition);
 };
 
 /**
@@ -176,36 +170,6 @@ export function useMouseWheel() {
     document.removeEventListener('wheel', handleMouseWheel);
   });
 }
-
-// /**
-//  * Panic Button, use Esc and Backquote
-//  */
-// function usePanic() {
-//   const panicButtonList = ['Escape', 'Backquote'];
-//   const isPanicButton = (ev: KeyboardEvent) =>
-//     !ev.isComposing && !ev.defaultPrevented && panicButtonList.includes(ev.code);
-//   const GUIStore = useGenSyncRef((state: RootState) => state.GUI);
-//   const isTitleShown = useCallback(() => GUIStore.current.showTitle, [GUIStore]);
-//   const isPanicOverlayOpen = useIsPanicOverlayOpen(GUIStore);
-//   const setComponentVisibility = useSetComponentVisibility();
-//   const handlePressPanicButton = useCallback((ev: KeyboardEvent) => {
-//     if (!isPanicButton(ev) || isTitleShown()) return;
-//     if (isPanicOverlayOpen()) {
-//       setComponentVisibility('showPanicOverlay', false);
-//       // todo: resume
-//     } else {
-//       setComponentVisibility('showPanicOverlay', true);
-//       stopAll(); // despite the name, it only disables fast mode and auto mode
-//       // todo: pause music & animation for better performance
-//     }
-//   }, []);
-//   useMounted(() => {
-//     document.addEventListener('keyup', handlePressPanicButton);
-//   });
-//   useUnMounted(() => {
-//     document.removeEventListener('keyup', handlePressPanicButton);
-//   });
-// }
 
 /**
  * ctrl控制快进
@@ -304,12 +268,6 @@ function useIsOpenedExtra<T = any>(GUIStore: T & any): () => boolean {
   }, [GUIStore]);
 }
 
-// function useGetIsPanicOverlayOpen<T = any>(GUIStore: T & any): () => boolean {
-//   return useCallback(() => {
-//     return GUIStore.current.showPanicOverlay;
-//   }, [GUIStore]);
-// }
-
 // 验证是否在存档 / 读档 / 选项页面
 function useValidMenuPanelTag<T = any>(GUIStore: T & any): () => boolean {
   return useCallback(() => {
@@ -332,16 +290,16 @@ export function useSetComponentVisibility(): (component: keyof componentsVisibil
   };
 }
 
-function nextTick(callback: () => void) {
-  // 具体实现根据浏览器的兼容实现微任务
-  if (typeof Promise !== 'undefined') {
-    const p = Promise.resolve();
-    p.then(callback);
-  } else {
-    // 兼容IE
-    setTimeout(callback, 0);
-  }
-}
+// function nextTick(callback: () => void) {
+//   // 具体实现根据浏览器的兼容实现微任务
+//   if (typeof Promise !== 'undefined') {
+//     const p = Promise.resolve();
+//     p.then(callback);
+//   } else {
+//     // 兼容IE
+//     setTimeout(callback, 0);
+//   }
+// }
 
 /**
  * 空格 & 回车 跳转到下一条

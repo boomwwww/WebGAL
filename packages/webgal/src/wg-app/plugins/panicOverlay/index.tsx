@@ -10,10 +10,16 @@ const panicOverlay = ({ key }: { key: string[] }): WgPlugin => {
     install(app: WgApp, useOptions: any) {
       const defaults = { key: ['Escape', 'Backquote'] };
       const config = { ...defaults, key, ...useOptions };
-      app.addTopComponents([<PanicOverlay key="panic-overlay" />]);
       app.addPluginHotkeyHook(useUsePanic(config.key));
-      const GUIStore = useGenSyncRef((state: RootState) => state.GUI);
-      const getIsPanicOverlayOpen = useGetIsPanicOverlayOpen(GUIStore);
+
+      app.addTopComponents([<PanicOverlay key="panic-overlay" />]);
+
+      const getIsPanicOverlayOpen = () => {
+        console.log('getIsPanicOverlayOpen');
+
+        const GUIStore = useGenSyncRef((state: RootState) => state.GUI);
+        return useGetIsPanicOverlayOpen(GUIStore)();
+      };
       app.addMouseWheelDisabledCondition(getIsPanicOverlayOpen);
     },
   };

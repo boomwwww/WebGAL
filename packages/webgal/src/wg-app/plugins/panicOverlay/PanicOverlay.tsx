@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 // import ReactDOM from 'react-dom';
-import { useSelector } from 'react-redux';
 
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
-import styles from './panicOverlay.module.scss';
 import { PanicYoozle } from './PanicYoozle/PanicYoozle';
+
+import styles from './panicOverlay.module.scss';
 
 export const PanicOverlay = () => {
   const GUIStore = useSelector((state: RootState) => state.GUI);

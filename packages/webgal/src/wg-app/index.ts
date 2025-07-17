@@ -18,7 +18,7 @@ const app = {
     wgAppObj.addMouseWheelDisabledCondition(condition);
   },
   use(plugin: any, options?: any) {
-    console.log(`use ${plugin.name}`);
+    console.log(`use plugin ${plugin.name}`);
     plugin.install(app, options ?? {});
   },
   mount(selctor: string) {

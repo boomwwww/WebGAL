@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './stage.module.scss';
 import { TextBox } from './TextBox/TextBox';
 import { AudioContainer } from './AudioContainer/AudioContainer';
