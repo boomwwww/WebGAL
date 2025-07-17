@@ -61,7 +61,7 @@ interface IComponentsVisibility {
   showBacklog: boolean;
   showExtra: boolean;
   showGlobalDialog: boolean;
-  showPanicOverlay: boolean;
+  // showPanicOverlay: boolean;
   isEnterGame: boolean;
   isShowLogo: boolean;
 }
