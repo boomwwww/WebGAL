@@ -1,6 +1,6 @@
 import { logger } from '../logger';
 import { syncWithOrigine } from '@/Core/util/syncWithEditor/syncWithOrigine';
-import { DebugCommand, IComponentVisibilityCommand, IDebugMessage } from '@/types/debugProtocol';
+// import { DebugCommand, IComponentVisibilityCommand, IDebugMessage } from '@/types/debugProtocol';
 import { WebGAL } from '@/Core/WebGAL';
 import { webgalStore } from '@/store/store';
 import { sceneParser, WebgalParser } from '@/Core/parser/sceneParser';
@@ -9,6 +9,25 @@ import { nextSentence } from '@/Core/controller/gamePlay/nextSentence';
 import { setFontOptimization, setVisibility } from '@/store/GUIReducer';
 import { resetStage } from '@/Core/controller/stage/resetStage';
 import { ISentence } from '@/Core/controller/scene/sceneInterface';
+
+enum DebugCommand {
+  // 跳转
+  JUMP,
+  // 同步自客户端
+  SYNCFC,
+  // 同步自编辑器
+  SYNCFE,
+  // 执行指令
+  EXE_COMMAND,
+  // 重新拉取模板样式文件
+  REFETCH_TEMPLATE_FILES,
+  // 返回主界面
+  SET_COMPONENT_VISIBILITY,
+  // 临时场景
+  TEMP_SCENE,
+  // 字体优化
+  FONT_OPTIMIZATION,
+}
 
 const visibilitySettableComponentOptions = ['showTitle', 'showMenuPanel', 'showPanicOverlay'] as const;
 
@@ -39,7 +58,7 @@ export const webSocketFunc = () => {
       const message: IDebugMessage = {
         event: 'message',
         data: {
-          command: DebugCommand.SYNCFC,
+          command: 'SYNCFC',
           sceneMsg: {
             scene: WebGAL.sceneManager.sceneData.currentScene.sceneName,
             sentence: WebGAL.sceneManager.sceneData.currentSentenceId,
@@ -61,11 +80,11 @@ export const webSocketFunc = () => {
     const data: IDebugMessage = JSON.parse(str);
     const message = data.data;
     switch (message.command) {
-      case DebugCommand.JUMP: {
+      case 'JUMP': {
         syncWithOrigine(message.sceneMsg.scene, message.sceneMsg.sentence, message.message === 'exp');
         break;
       }
-      case DebugCommand.EXE_COMMAND: {
+      case 'EXE_COMMAND': {
         const command = message.message;
         const scene = WebgalParser.parse(command, 'temp.txt', 'temp.txt');
         scene.sentenceList.forEach((sentence: ISentence) => {
@@ -73,7 +92,7 @@ export const webSocketFunc = () => {
         });
         break;
       }
-      case DebugCommand.REFETCH_TEMPLATE_FILES: {
+      case 'REFETCH_TEMPLATE_FILES': {
         const title = document.getElementById('Title_enter_page');
         if (title) {
           title.style.display = 'none';
@@ -81,7 +100,7 @@ export const webSocketFunc = () => {
         WebGAL.events.styleUpdate.emit();
         break;
       }
-      case DebugCommand.SET_COMPONENT_VISIBILITY: {
+      case 'SET_COMPONENT_VISIBILITY': {
         const command = message.message;
         const commandData = JSON.parse(command) as IComponentVisibilityCommand[];
         commandData.forEach((item) => {
@@ -91,7 +110,7 @@ export const webSocketFunc = () => {
         });
         break;
       }
-      case DebugCommand.TEMP_SCENE: {
+      case 'TEMP_SCENE': {
         const command = message.message;
         resetStage(true);
         WebGAL.sceneManager.sceneData.currentScene = sceneParser(command, 'temp', './temp.txt');
@@ -103,7 +122,7 @@ export const webSocketFunc = () => {
         }, 100);
         break;
       }
-      case DebugCommand.FONT_OPTIMIZATION: {
+      case 'FONT_OPTIMIZATION': {
         const command = message.message;
         webgalStore.dispatch(setFontOptimization(command === 'true'));
         break;
