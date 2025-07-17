@@ -6,7 +6,15 @@ import { Load } from './SaveAndLoad/Load/Load';
 import { Options } from './Options/Options';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { MenuPanelTag } from '@/store/guiInterface';
+// import { MenuPanelTag } from '@/store/guiInterface';
+/**
+ * 当前Menu页面显示的Tag
+ */
+enum MenuPanelTag {
+  Save, // “保存”选项卡
+  Load, // “读取”选项卡
+  Option, // “设置”选项卡
+}
 
 /**
  * Menu 页面，包括存读档、选项等

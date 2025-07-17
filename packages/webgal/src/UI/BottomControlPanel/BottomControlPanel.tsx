@@ -9,7 +9,7 @@ import useFullScreen from '@/hooks/useFullScreen';
 import useSoundEffect from '@/hooks/useSoundEffect';
 import useTrans from '@/hooks/useTrans';
 import { setMenuPanelTag, setVisibility } from '@/store/GUIReducer';
-import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
+// import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
 import { RootState } from '@/store/store';
 import {
   AlignTextLeftOne,

@@ -3,14 +3,20 @@
  * @author Mahiru
  */
 import { getStorage } from '@/Core/controller/storage/storageController';
-import { GuiAsset, IGuiState, MenuPanelTag, setAssetPayload, setVisibilityPayload } from '@/store/guiInterface';
+// import { GuiAsset, IGuiState, MenuPanelTag, setAssetPayload, setVisibilityPayload } from './guiInterface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { key } from 'localforage';
 
 /**
- * 初始GUI状态表
+ * 当前Menu页面显示的Tag
  */
-const initState: IGuiState = {
+export enum MenuPanelTag {
+  Save, // “保存”选项卡
+  Load, // “读取”选项卡
+  Option, // “设置”选项卡
+}
+
+const defaultInitState = {
   showBacklog: false,
   showStarter: true,
   showTitle: true,
@@ -24,11 +30,26 @@ const initState: IGuiState = {
   logoImage: [],
   showExtra: false,
   showGlobalDialog: false,
-  showPanicOverlay: false,
+  // showPanicOverlay: false,
   isEnterGame: false,
   isShowLogo: true,
   enableAppreciationMode: false, // Paf87
   fontOptimization: false,
+};
+
+export const extendInitState = <K extends keyof IExtendingGuiState>(state: K, value: IExtendingGuiState[K]) => {
+  extendingInitState[state] = value;
+};
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+const extendingInitState = {} as IExtendingGuiState;
+
+/**
+ * 初始GUI状态表
+ */
+const initState: IGuiState = {
+  ...defaultInitState,
+  ...extendingInitState,
 };
 
 /**

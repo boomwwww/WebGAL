@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-// import ReactDOM from 'react-dom';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -15,12 +14,8 @@ export const PanicOverlay = () => {
   const panic = globalVars['Show_panic'];
   const hidePanic = panic === false;
   useEffect(() => {
-    const isShowOverlay = GUIStore.showPanicOverlay && !hidePanic;
+    const isShowOverlay = (GUIStore.showPanicOverlay && !hidePanic) || false;
     setShowOverlay(isShowOverlay);
   }, [GUIStore.showPanicOverlay, hidePanic]);
-  // return ReactDOM.createPortal(
-  //   <div className={showOverlay ? styles.panic_overlay_main : ''}>{showOverlay && <PanicYoozle />}</div>,
-  //   document.querySelector('div#panic-overlay')!,
-  // );
   return <div className={showOverlay ? styles.panic_overlay_main : ''}>{showOverlay && <PanicYoozle />}</div>;
 };

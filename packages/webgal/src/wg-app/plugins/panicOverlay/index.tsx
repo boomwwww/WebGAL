@@ -21,6 +21,7 @@ const panicOverlay = ({ key }: { key: string[] }): WgPlugin => {
         return useGetIsPanicOverlayOpen(GUIStore)();
       };
       app.addMouseWheelDisabledCondition(getIsPanicOverlayOpen);
+      app.extendGuiInitState('showPanicOverlay', false);
     },
   };
 };

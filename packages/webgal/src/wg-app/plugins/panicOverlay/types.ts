@@ -1,0 +1,3 @@
+interface IExtendingGuiState {
+  showPanicOverlay: boolean;
+}

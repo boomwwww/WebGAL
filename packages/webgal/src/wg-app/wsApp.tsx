@@ -11,6 +11,9 @@ import './styles/index.css';
 import { addMouseWheelDisabledCondition as addMwdc } from '@/hooks/useHotkey';
 import { addPluginHotkeyHook as addPhh } from '@/hooks/useHotkey';
 
+import { extendInitState } from '@/store/GUIReducer';
+// import { IGuiState } from '@/store/guiInterface';
+
 const init = async (selctor: string) => {
   function WgApp() {
     // windowsize
@@ -311,12 +314,17 @@ const addPluginHotkeyHook = (pluginHotkeyHook: () => void) => {
   addPhh(pluginHotkeyHook);
 };
 
+const extendGuiInitState = <K extends keyof IExtendingGuiState>(state: K, value: IExtendingGuiState[K]) => {
+  extendInitState(state, value);
+};
+
 const wgAppObj = {
   init,
   addComponents,
   addTopComponents,
   addMouseWheelDisabledCondition,
   addPluginHotkeyHook,
+  extendGuiInitState,
 };
 
 export { wgAppObj };

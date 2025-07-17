@@ -2,6 +2,8 @@ import { JSX, ReactPortal } from 'react';
 
 import { wgAppObj } from './wsApp';
 
+// import { IGuiState } from '@/store/guiInterface';
+
 export type WgApp = typeof app;
 
 const app = {
@@ -16,6 +18,9 @@ const app = {
   },
   addMouseWheelDisabledCondition(condition: () => boolean) {
     wgAppObj.addMouseWheelDisabledCondition(condition);
+  },
+  extendGuiInitState<K extends keyof IExtendingGuiState>(state: K, value: IExtendingGuiState[K]) {
+    wgAppObj.extendGuiInitState(state, value);
   },
   use(plugin: any, options?: any) {
     console.log(`use plugin ${plugin.name}`);

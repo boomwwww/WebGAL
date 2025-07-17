@@ -14,7 +14,7 @@ import { MainStage } from '@/Stage/MainStage/MainStage';
 import IntroContainer from '@/Stage/introContainer/IntroContainer';
 import { isIOS } from '@/Core/initializeScript';
 import { WebGAL } from '@/Core/WebGAL';
-import { IGuiState } from '@/store/guiInterface';
+// import { IGuiState } from '@/store/guiInterface';
 import { IStageState } from '@/store/stageInterface';
 // import OldStage from '@/Components/Stage/OldStage/OldStage';
 

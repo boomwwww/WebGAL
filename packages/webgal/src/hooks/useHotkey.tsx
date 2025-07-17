@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle';
 
 import { useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
-import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
+// import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
 import { setVisibility } from '@/store/GUIReducer';
 import { setOptionData } from '@/store/userDataReducer';
 
@@ -46,8 +46,6 @@ export const keyboard: Keyboard | undefined = 'keyboard' in navigator && (naviga
 
 // export function useHotkey(opt?: HotKeyType) {
 export function useHotkey() {
-  console.log(`--------------useHotkey--------------`);
-
   useMouseRightClickHotKey();
   useMouseWheel();
   useSkip();
@@ -385,6 +383,10 @@ function usePluginHotkeyHooks() {
 
 let pluginHotkeyHooks: (() => void)[] = [];
 
+/**
+ * 添加插件快捷键钩子
+ * @param pluginHotkeyHook
+ */
 export const addPluginHotkeyHook = (pluginHotkeyHook: () => void) => {
   pluginHotkeyHooks.push(pluginHotkeyHook);
 };

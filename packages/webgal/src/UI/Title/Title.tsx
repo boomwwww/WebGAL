@@ -5,7 +5,7 @@ import { continueGame, startGame } from '@/Core/controller/gamePlay/startContinu
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, webgalStore } from '@/store/store';
 import { setMenuPanelTag, setVisibility } from '@/store/GUIReducer';
-import { MenuPanelTag } from '@/store/guiInterface';
+// import { MenuPanelTag } from '@/store/guiInterface';
 import useTrans from '@/hooks/useTrans';
 // import { resize } from '@/Core/util/resize';
 import { hasFastSaveRecord, loadFastSaveGame } from '@/Core/controller/storage/fastSaveLoad';
