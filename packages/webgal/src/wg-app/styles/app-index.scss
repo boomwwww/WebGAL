@@ -1,23 +1,23 @@
 @charset "UTF-8";
 
-@import './Core/util/constants';
+@import '@/Core/util/constants';
 
 @font-face {
   font-family: '思源宋体';
   /*noinspection CssUnknownTarget*/
-  src: url('assets/fonts/SourceHanSerifCN-Regular.ttf') format('truetype');
+  src: url('@/assets/fonts/SourceHanSerifCN-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'LXGW';
   /*noinspection CssUnknownTarget*/
-  src: url('assets/fonts/LXGWWenKai-Regular.ttf') format('truetype');
+  src: url('@/assets/fonts/LXGWWenKai-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'WebgalUI';
   /*noinspection CssUnknownTarget*/
-  src: url('assets/fonts/OPPOSans-R.ttf') format('truetype');
+  src: url('@/assets/fonts/OPPOSans-R.ttf') format('truetype');
 }
 
 .StartButton {

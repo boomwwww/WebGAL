@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../index.scss';
-import App from '../App';
-import '../assets/style/animation.scss';
+
+import App from './App';
+
+import './styles/app-index.scss';
+import '@/assets/style/animation.scss';
 import 'modern-css-reset/dist/reset.min.css';
 
 /**
