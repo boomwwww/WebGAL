@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { JSX, ReactPortal } from 'react';
 import ReactDOM from 'react-dom';
 
-import './styles/index.css';
-
-import { JSX, ReactPortal } from 'react';
+import { Provider } from 'react-redux';
+import { webgalStore } from '@/store/store';
 
 import { main } from './main';
 
-import { webgalStore } from '../store/store';
-import { Provider } from 'react-redux';
+import './styles/index.css';
+
+import { addMouseWheelDisabledCondition as addMwdc } from '@/hooks/useHotkey';
+import { addPluginHotkeyHook as addPhh } from '@/hooks/useHotkey';
 
 const init = async (selctor: string) => {
   function WgApp() {
@@ -302,10 +303,20 @@ const addTopComponents = (components: (JSX.Element | ReactPortal)[]) => {
   topComponents = [...topComponents, ...components];
 };
 
+const addMouseWheelDisabledCondition = (condition: () => boolean) => {
+  addMwdc(condition);
+};
+
+const addPluginHotkeyHook = (pluginHotkeyHook: () => void) => {
+  addPhh(pluginHotkeyHook);
+};
+
 const wgAppObj = {
   init,
   addComponents,
   addTopComponents,
+  addMouseWheelDisabledCondition,
+  addPluginHotkeyHook,
 };
 
 export { wgAppObj };

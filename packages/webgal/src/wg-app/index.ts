@@ -1,6 +1,6 @@
-import { wgAppObj } from './wsApp';
-
 import { JSX, ReactPortal } from 'react';
+
+import { wgAppObj } from './wsApp';
 
 export type WgApp = typeof app;
 
@@ -10,6 +10,12 @@ const app = {
   },
   addTopComponents(components: (JSX.Element | ReactPortal)[]) {
     wgAppObj.addTopComponents(components);
+  },
+  addPluginHotkeyHook(pluginHotkeyHook: () => void) {
+    wgAppObj.addPluginHotkeyHook(pluginHotkeyHook);
+  },
+  addMouseWheelDisabledCondition(condition: () => boolean) {
+    wgAppObj.addMouseWheelDisabledCondition(condition);
   },
   use(plugin: any, options?: any) {
     console.log(`use ${plugin.name}`);

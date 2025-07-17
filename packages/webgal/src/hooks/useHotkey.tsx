@@ -1,19 +1,24 @@
+import { useCallback, useEffect, useRef } from 'react';
+
+import throttle from 'lodash/throttle';
+
+import { useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
+import { setVisibility } from '@/store/GUIReducer';
+import { setOptionData } from '@/store/userDataReducer';
+
+import { WebGAL } from '@/Core/WebGAL';
 import { startFast, stopAll, stopFast } from '@/Core/controller/gamePlay/fastSkip';
 import { nextSentence } from '@/Core/controller/gamePlay/nextSentence';
 import { fastSaveGame } from '@/Core/controller/storage/fastSaveLoad';
 import { setStorage } from '@/Core/controller/storage/storageController';
-import { WebGAL } from '@/Core/WebGAL';
+
 import { useGenSyncRef } from '@/hooks/useGenSyncRef';
 import { useMounted, useUnMounted, useUpdated } from '@/hooks/useLifeCycle';
-import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
-import { setVisibility } from '@/store/GUIReducer';
-import { RootState } from '@/store/store';
-import { setOptionData } from '@/store/userDataReducer';
+import useFullScreen from '@/hooks/useFullScreen';
+
 import styles from '@/UI/Backlog/backlog.module.scss';
-import throttle from 'lodash/throttle';
-import { useCallback, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import useFullScreen from './useFullScreen';
 
 // options备用
 export interface HotKeyType {
@@ -92,9 +97,23 @@ export function useMouseRightClickHotKey() {
   });
 }
 
-let wheelTimeout = setTimeout(() => {
-  // 初始化，什么也不干
-}, 0);
+let wheelTimeout = setTimeout(() => {}, 0); // 初始化，什么也不干
+
+function useGetIsPanicOverlayOpen<T = any>(GUIStore: T & any): () => boolean {
+  return useCallback(() => {
+    return GUIStore.current.showPanicOverlay;
+  }, [GUIStore]);
+}
+
+const mouseWheelDisabledConditions: (() => boolean)[] = [];
+
+export const addMouseWheelDisabledCondition = (condition: () => boolean) => {
+  mouseWheelDisabledConditions.push(condition);
+};
+
+const useGetIsMouseWheelDisabled = () => {
+  return () => mouseWheelDisabledConditions.some((condition) => condition());
+};
 
 /**
  * 滚轮向上打开历史记录
@@ -106,7 +125,7 @@ export function useMouseWheel() {
   const setComponentVisibility = useSetComponentVisibility();
   const isGameActive = useGameActive(GUIStore);
   const isInBackLog = useIsInBackLog(GUIStore);
-  const isPanicOverlayOpen = useIsPanicOverlayOpen(GUIStore);
+  const getIsMouseWheelDisabled = useGetIsMouseWheelDisabled();
   const next = useCallback(
     throttle(() => {
       nextSentence();
@@ -117,7 +136,8 @@ export function useMouseWheel() {
   // 问就是抄的999
   const prevDownWheelTimeRef = useRef(0);
   const handleMouseWheel = useCallback((ev) => {
-    if (isPanicOverlayOpen()) return;
+    const isMouseWheelDisabled = getIsMouseWheelDisabled();
+    if (isMouseWheelDisabled) return;
     const direction =
       (ev.wheelDelta && (ev.wheelDelta > 0 ? 'up' : 'down')) ||
       (ev.detail && (ev.detail < 0 ? 'up' : 'down')) ||
@@ -284,11 +304,11 @@ function useIsOpenedExtra<T = any>(GUIStore: T & any): () => boolean {
   }, [GUIStore]);
 }
 
-function useIsPanicOverlayOpen<T = any>(GUIStore: T & any): () => boolean {
-  return useCallback(() => {
-    return GUIStore.current.showPanicOverlay;
-  }, [GUIStore]);
-}
+// function useGetIsPanicOverlayOpen<T = any>(GUIStore: T & any): () => boolean {
+//   return useCallback(() => {
+//     return GUIStore.current.showPanicOverlay;
+//   }, [GUIStore]);
+// }
 
 // 验证是否在存档 / 读档 / 选项页面
 function useValidMenuPanelTag<T = any>(GUIStore: T & any): () => boolean {
@@ -305,7 +325,7 @@ function useValidMenuGameStart() {
   }, [WebGAL.sceneManager.sceneData]);
 }
 
-function useSetComponentVisibility(): (component: keyof componentsVisibility, visibility: boolean) => void {
+export function useSetComponentVisibility(): (component: keyof componentsVisibility, visibility: boolean) => void {
   const dispatch = useDispatch();
   return (component: keyof componentsVisibility, visibility: boolean) => {
     dispatch(setVisibility({ component, visibility }));

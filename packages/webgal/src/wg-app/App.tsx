@@ -1,3 +1,8 @@
+import { useEffect } from 'react';
+import { JSX, ReactPortal } from 'react';
+
+import { initializeScript } from '@/Core/initializeScript';
+
 import { Stage } from '@/Stage/Stage';
 
 import { Backlog } from '@/UI/Backlog/Backlog';
@@ -11,11 +16,6 @@ import Menu from '@/UI/Menu/Menu';
 // import { PanicOverlay } from '@/wg-app/plugins/panicOverlay/PanicOverlay';
 import Title from '@/UI/Title/Title';
 import Translation from '@/UI/Translation/Translation';
-
-import { initializeScript } from '@/Core/initializeScript';
-
-import { useEffect } from 'react';
-import { JSX, ReactPortal } from 'react';
 
 interface AppProps {
   components: (JSX.Element | ReactPortal)[];
