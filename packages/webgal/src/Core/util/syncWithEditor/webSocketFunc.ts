@@ -10,6 +10,8 @@ import { setFontOptimization, setVisibility } from '@/store/GUIReducer';
 import { resetStage } from '@/Core/controller/stage/resetStage';
 import { ISentence } from '@/Core/controller/scene/sceneInterface';
 
+const visibilitySettableComponentOptions = ['showTitle', 'showMenuPanel', 'showPanicOverlay'] as const;
+
 export const webSocketFunc = () => {
   const protocol: string = window.location.protocol;
   const loc: string = window.location.hostname;
@@ -58,49 +60,6 @@ export const webSocketFunc = () => {
     const str: string = e.data;
     const data: IDebugMessage = JSON.parse(str);
     const message = data.data;
-    // if (message.command === DebugCommand.JUMP) {
-    //   syncWithOrigine(message.sceneMsg.scene, message.sceneMsg.sentence, message.message === 'exp');
-    // }
-    // if (message.command === DebugCommand.EXE_COMMAND) {
-    //   const command = message.message;
-    //   const scene = WebgalParser.parse(command, 'temp.txt', 'temp.txt');
-    //   scene.sentenceList.forEach((sentence: ISentence) => {
-    //     runScript(sentence);
-    //   });
-    // }
-    // if (message.command === DebugCommand.REFETCH_TEMPLATE_FILES) {
-    //   const title = document.getElementById('Title_enter_page');
-    //   if (title) {
-    //     title.style.display = 'none';
-    //   }
-    //   WebGAL.events.styleUpdate.emit();
-    // }
-    // if (message.command === DebugCommand.SET_COMPONENT_VISIBILITY) {
-    //   // handle SET_COMPONENT_VISIBILITY message
-    //   const command = message.message;
-
-    //   const commandData = JSON.parse(command) as IComponentVisibilityCommand[];
-    //   commandData.forEach((item) => {
-    //     if (item) {
-    //       webgalStore.dispatch(setVisibility({ component: item.component, visibility: item.visibility }));
-    //     }
-    //   });
-    // }
-    // if (message.command === DebugCommand.TEMP_SCENE) {
-    //   const command = message.message;
-    //   resetStage(true);
-    //   WebGAL.sceneManager.sceneData.currentScene = sceneParser(command, 'temp', './temp.txt');
-    //   webgalStore.dispatch(setVisibility({ component: 'showTitle', visibility: false }));
-    //   webgalStore.dispatch(setVisibility({ component: 'showMenuPanel', visibility: false }));
-    //   webgalStore.dispatch(setVisibility({ component: 'showPanicOverlay', visibility: false }));
-    //   setTimeout(() => {
-    //     nextSentence();
-    //   }, 100);
-    // }
-    // if (message.command === DebugCommand.FONT_OPTIMIZATION) {
-    //   const command = message.message;
-    //   webgalStore.dispatch(setFontOptimization(command === 'true'));
-    // }
     switch (message.command) {
       case DebugCommand.JUMP: {
         syncWithOrigine(message.sceneMsg.scene, message.sceneMsg.sentence, message.message === 'exp');
@@ -136,9 +95,14 @@ export const webSocketFunc = () => {
         const command = message.message;
         resetStage(true);
         WebGAL.sceneManager.sceneData.currentScene = sceneParser(command, 'temp', './temp.txt');
-        webgalStore.dispatch(setVisibility({ component: 'showTitle', visibility: false }));
-        webgalStore.dispatch(setVisibility({ component: 'showMenuPanel', visibility: false }));
-        webgalStore.dispatch(setVisibility({ component: 'showPanicOverlay', visibility: false }));
+
+        // webgalStore.dispatch(setVisibility({ component: 'showTitle', visibility: false }));
+        // webgalStore.dispatch(setVisibility({ component: 'showMenuPanel', visibility: false }));
+        // webgalStore.dispatch(setVisibility({ component: 'showPanicOverlay', visibility: false }));
+        for (const option of visibilitySettableComponentOptions) {
+          webgalStore.dispatch(setVisibility({ component: option, visibility: false }));
+        }
+
         setTimeout(() => {
           nextSentence();
         }, 100);
@@ -155,7 +119,7 @@ export const webSocketFunc = () => {
       }
     }
   };
-  socket.onerror = (e) => {
+  socket.onerror = (_e) => {
     logger.info('当前没有连接到 Terre 编辑器');
   };
 };
