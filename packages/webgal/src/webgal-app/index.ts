@@ -1,33 +1,33 @@
 import { JSX, ReactPortal } from 'react';
 
-import { wgAppObj } from './wsApp';
+import { webgalAppObj } from './webgalApp';
 
-export type WgApp = typeof app;
+export type WebgalApp = typeof app;
 
 const app = {
   addComponents(components: (JSX.Element | ReactPortal)[]) {
-    wgAppObj.addComponents(components);
+    webgalAppObj.addComponents(components);
   },
   addTopComponents(components: (JSX.Element | ReactPortal)[]) {
-    wgAppObj.addTopComponents(components);
+    webgalAppObj.addTopComponents(components);
   },
   addPluginHotkeyHook(pluginHotkeyHook: () => void) {
-    wgAppObj.addPluginHotkeyHook(pluginHotkeyHook);
+    webgalAppObj.addPluginHotkeyHook(pluginHotkeyHook);
   },
   addMouseWheelDisabledCondition(condition: () => boolean) {
-    wgAppObj.addMouseWheelDisabledCondition(condition);
+    webgalAppObj.addMouseWheelDisabledCondition(condition);
   },
   extendGuiInitState<K extends keyof IExtendingGuiState>(state: K, value: IExtendingGuiState[K]) {
-    wgAppObj.extendGuiInitState(state, value);
+    webgalAppObj.extendGuiInitState(state, value);
   },
-  use(plugin: WebgalPlugin, options?: any) {
+  use<T>(plugin: WebgalPlugin<T>, options?: T) {
     console.log(`use plugin ${plugin.name}`);
-    plugin.install(app, options ?? {});
+    plugin.install(app, options);
     return app;
   },
   mount(selctor: string) {
     console.log(`mount ${selctor}`);
-    wgAppObj.init(selctor);
+    webgalAppObj.init(selctor);
   },
   $args: [] as any[],
 };

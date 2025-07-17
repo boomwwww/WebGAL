@@ -297,12 +297,12 @@ const init = async (selctor: string) => {
   main(pluginComponents);
 };
 
-let topComponents: (JSX.Element | ReactPortal)[] = [];
-let pluginComponents: (JSX.Element | ReactPortal)[] = [];
-const addComponents = (components: (JSX.Element | ReactPortal)[]) => {
+let topComponents: (JSX.Element | React.FC | ReactPortal)[] = [];
+let pluginComponents: (JSX.Element | React.FC | ReactPortal)[] = [];
+const addComponents = (components: (JSX.Element | React.FC | ReactPortal)[]) => {
   pluginComponents = [...pluginComponents, ...components];
 };
-const addTopComponents = (components: (JSX.Element | ReactPortal)[]) => {
+const addTopComponents = (components: (JSX.Element | React.FC | ReactPortal)[]) => {
   topComponents = [...topComponents, ...components];
 };
 
@@ -318,7 +318,7 @@ const extendGuiInitState = <K extends keyof IExtendingGuiState>(state: K, value:
   extendInitState(state, value);
 };
 
-const wgAppObj = {
+const webgalAppObj = {
   init,
   addComponents,
   addTopComponents,
@@ -327,4 +327,4 @@ const wgAppObj = {
   extendGuiInitState,
 };
 
-export { wgAppObj };
+export { webgalAppObj };

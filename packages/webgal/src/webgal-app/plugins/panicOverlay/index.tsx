@@ -4,13 +4,13 @@ import { useUsePanic, useGetIsPanicOverlayOpen } from './hooks';
 import { RootState } from '@/store/store';
 import { useGenSyncRef } from '@/hooks/useGenSyncRef';
 
-const panicOverlay = (options: { hotkeys: string[] }): WebgalPlugin => {
+const panicOverlay = (options?: PanicOverlayOptions): WebgalPlugin<PanicOverlayOptions> => {
   return {
     name: 'panicOverlay',
-    install(app: WgApp, useOptions: any) {
+    install(app: WebgalApp, useOptions?: PanicOverlayOptions) {
       const defaults = { hotkeys: ['Escape', 'Backquote'] };
-      const config = { ...defaults, ...options, ...useOptions };
-      app.addPluginHotkeyHook(useUsePanic(config.key));
+      const config = { ...defaults, ...(options ?? {}), ...(useOptions ?? {}) };
+      app.addPluginHotkeyHook(useUsePanic(config.hotkeys));
 
       app.addTopComponents([<PanicOverlay key="panic-overlay" />]);
 

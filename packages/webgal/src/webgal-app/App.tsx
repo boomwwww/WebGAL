@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { JSX, ReactPortal } from 'react';
+import { JSX, FC, ReactPortal } from 'react';
 
 import { initializeScript } from '@/Core/initializeScript';
 
@@ -18,7 +18,7 @@ import Title from '@/UI/Title/Title';
 import Translation from '@/UI/Translation/Translation';
 
 interface AppProps {
-  components: (JSX.Element | ReactPortal)[];
+  components: (JSX.Element | FC | ReactPortal)[];
 }
 
 function App({ components }: AppProps) {

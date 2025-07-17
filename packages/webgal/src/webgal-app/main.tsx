@@ -16,7 +16,7 @@ import { defaultLanguage, i18nTranslationResources, language } from '../config/l
 import { webgalStore } from '../store/store';
 import { Provider } from 'react-redux';
 
-export const main = (pluginComponents: (React.ReactPortal | React.JSX.Element)[]) => {
+export const main = (pluginComponents: (React.ReactPortal | React.FC | React.JSX.Element)[]) => {
   i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
