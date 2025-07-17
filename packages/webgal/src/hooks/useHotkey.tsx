@@ -39,14 +39,16 @@ export const keyboard: Keyboard | undefined = 'keyboard' in navigator && (naviga
 // export const fastSaveGameKey = `FastSaveKey`;
 // export const isFastSaveKey = `FastSaveActive`;
 
-export function useHotkey(opt?: HotKeyType) {
+// export function useHotkey(opt?: HotKeyType) {
+export function useHotkey() {
   useMouseRightClickHotKey();
   useMouseWheel();
   useSkip();
-  usePanic();
+  // usePanic();
   useFastSaveBeforeUnloadPage();
   useSpaceAndEnter();
   useToggleFullScreen();
+  usePluginHotkeyHooks();
 }
 
 /**
@@ -155,35 +157,35 @@ export function useMouseWheel() {
   });
 }
 
-/**
- * Panic Button, use Esc and Backquote
- */
-export function usePanic() {
-  const panicButtonList = ['Escape', 'Backquote'];
-  const isPanicButton = (ev: KeyboardEvent) =>
-    !ev.isComposing && !ev.defaultPrevented && panicButtonList.includes(ev.code);
-  const GUIStore = useGenSyncRef((state: RootState) => state.GUI);
-  const isTitleShown = useCallback(() => GUIStore.current.showTitle, [GUIStore]);
-  const isPanicOverlayOpen = useIsPanicOverlayOpen(GUIStore);
-  const setComponentVisibility = useSetComponentVisibility();
-  const handlePressPanicButton = useCallback((ev: KeyboardEvent) => {
-    if (!isPanicButton(ev) || isTitleShown()) return;
-    if (isPanicOverlayOpen()) {
-      setComponentVisibility('showPanicOverlay', false);
-      // todo: resume
-    } else {
-      setComponentVisibility('showPanicOverlay', true);
-      stopAll(); // despite the name, it only disables fast mode and auto mode
-      // todo: pause music & animation for better performance
-    }
-  }, []);
-  useMounted(() => {
-    document.addEventListener('keyup', handlePressPanicButton);
-  });
-  useUnMounted(() => {
-    document.removeEventListener('keyup', handlePressPanicButton);
-  });
-}
+// /**
+//  * Panic Button, use Esc and Backquote
+//  */
+// function usePanic() {
+//   const panicButtonList = ['Escape', 'Backquote'];
+//   const isPanicButton = (ev: KeyboardEvent) =>
+//     !ev.isComposing && !ev.defaultPrevented && panicButtonList.includes(ev.code);
+//   const GUIStore = useGenSyncRef((state: RootState) => state.GUI);
+//   const isTitleShown = useCallback(() => GUIStore.current.showTitle, [GUIStore]);
+//   const isPanicOverlayOpen = useIsPanicOverlayOpen(GUIStore);
+//   const setComponentVisibility = useSetComponentVisibility();
+//   const handlePressPanicButton = useCallback((ev: KeyboardEvent) => {
+//     if (!isPanicButton(ev) || isTitleShown()) return;
+//     if (isPanicOverlayOpen()) {
+//       setComponentVisibility('showPanicOverlay', false);
+//       // todo: resume
+//     } else {
+//       setComponentVisibility('showPanicOverlay', true);
+//       stopAll(); // despite the name, it only disables fast mode and auto mode
+//       // todo: pause music & animation for better performance
+//     }
+//   }, []);
+//   useMounted(() => {
+//     document.addEventListener('keyup', handlePressPanicButton);
+//   });
+//   useUnMounted(() => {
+//     document.removeEventListener('keyup', handlePressPanicButton);
+//   });
+// }
 
 /**
  * ctrl控制快进
@@ -396,3 +398,15 @@ function useToggleFullScreen() {
     if (WebGAL.gameKey) setStorage();
   }, [isFullScreen]);
 }
+
+function usePluginHotkeyHooks() {
+  for (const pluginHotkeyHook of pluginHotkeyHooks) {
+    pluginHotkeyHook();
+  }
+}
+
+let pluginHotkeyHooks: (() => void)[] = [];
+
+export const addPluginHotkeyHook = (pluginHotkeyHook: () => void) => {
+  pluginHotkeyHooks.push(pluginHotkeyHook);
+};

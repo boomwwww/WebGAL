@@ -95,14 +95,9 @@ export const webSocketFunc = () => {
         const command = message.message;
         resetStage(true);
         WebGAL.sceneManager.sceneData.currentScene = sceneParser(command, 'temp', './temp.txt');
-
-        // webgalStore.dispatch(setVisibility({ component: 'showTitle', visibility: false }));
-        // webgalStore.dispatch(setVisibility({ component: 'showMenuPanel', visibility: false }));
-        // webgalStore.dispatch(setVisibility({ component: 'showPanicOverlay', visibility: false }));
         for (const option of visibilitySettableComponentOptions) {
           webgalStore.dispatch(setVisibility({ component: option, visibility: false }));
         }
-
         setTimeout(() => {
           nextSentence();
         }, 100);
