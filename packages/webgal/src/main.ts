@@ -1,8 +1,10 @@
-import { createWebGALApp } from './wg-app/index';
-import panicOverlay from './wg-app/plugins/panicOverlay';
+import { createWebgalApp } from './webgal-app/index';
+import panicOverlay from './webgal-app/plugins/panicOverlay';
 
-const wgApp = createWebGALApp();
+const webgalApp = createWebgalApp();
 
-wgApp.use(panicOverlay({ key: ['Escape', 'Backquote'] }));
-
-wgApp.mount('#wg-app');
+webgalApp
+  .use(panicOverlay({ hotkeys: ['Escape', 'Backquote'] }))
+  .use({ name: 'plugin1', install() {} })
+  .use({ name: 'plugin2', install() {} })
+  .mount('#webgal-app');

@@ -1,6 +1,6 @@
 type WgApp = import('./index').WgApp;
 
-interface WgPlugin {
+interface WebgalPlugin {
   name: string;
   install: (app: any, options?: any) => void;
 }

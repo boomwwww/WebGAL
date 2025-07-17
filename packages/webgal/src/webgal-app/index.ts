@@ -2,8 +2,6 @@ import { JSX, ReactPortal } from 'react';
 
 import { wgAppObj } from './wsApp';
 
-// import { IGuiState } from '@/store/guiInterface';
-
 export type WgApp = typeof app;
 
 const app = {
@@ -22,9 +20,10 @@ const app = {
   extendGuiInitState<K extends keyof IExtendingGuiState>(state: K, value: IExtendingGuiState[K]) {
     wgAppObj.extendGuiInitState(state, value);
   },
-  use(plugin: any, options?: any) {
+  use(plugin: WebgalPlugin, options?: any) {
     console.log(`use plugin ${plugin.name}`);
     plugin.install(app, options ?? {});
+    return app;
   },
   mount(selctor: string) {
     console.log(`mount ${selctor}`);
@@ -32,13 +31,12 @@ const app = {
   },
   $args: [] as any[],
 };
-export const createWebGALApp = (...args: {}[]) => {
+export const createWebgalApp = (...args: {}[]) => {
   app.$args = [...args];
-
   return app;
 };
 
-export const createWebGALStage = (...args: {}[]) => {
+export const createWebgalStage = (...args: {}[]) => {
   return {
     use(plugin: any) {
       console.log(`use ${plugin.name}`);
