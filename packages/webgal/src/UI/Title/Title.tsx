@@ -4,7 +4,7 @@ import { playBgm } from '@/Core/controller/stage/playBgm';
 import { continueGame, startGame } from '@/Core/controller/gamePlay/startContinueGame';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, webgalStore } from '@/store/store';
-import { setMenuPanelTag, setVisibility } from '@/store/GUIReducer';
+import { setMenuPanelTag, setVisibility, MenuPanelTagEnum } from '@/store/GUIReducer';
 // import { MenuPanelTag } from '@/store/guiInterface';
 import useTrans from '@/hooks/useTrans';
 // import { resize } from '@/Core/util/resize';
@@ -86,7 +86,7 @@ const Title: FC = () => {
               onClick={() => {
                 playSeClick();
                 dispatch(setVisibility({ component: 'showMenuPanel', visibility: true }));
-                dispatch(setMenuPanelTag(MenuPanelTag.Option));
+                dispatch(setMenuPanelTag(MenuPanelTagEnum.Option));
               }}
               onMouseEnter={playSeEnter}
             >
@@ -97,7 +97,7 @@ const Title: FC = () => {
               onClick={() => {
                 playSeClick();
                 dispatch(setVisibility({ component: 'showMenuPanel', visibility: true }));
-                dispatch(setMenuPanelTag(MenuPanelTag.Load));
+                dispatch(setMenuPanelTag(MenuPanelTagEnum.Load));
               }}
               onMouseEnter={playSeEnter}
             >

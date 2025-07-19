@@ -5,16 +5,26 @@
 import { getStorage } from '@/Core/controller/storage/storageController';
 // import { GuiAsset, IGuiState, MenuPanelTag, setAssetPayload, setVisibilityPayload } from './guiInterface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { key } from 'localforage';
+// import { key } from 'localforage';
 
 /**
- * 当前Menu页面显示的Tag
+ * 当前Menu页面显示的Tag1
  */
-export enum MenuPanelTag {
-  Save, // “保存”选项卡
-  Load, // “读取”选项卡
-  Option, // “设置”选项卡
-}
+// export enum MenuPanelTag {
+//   Save, // “保存”选项卡
+//   Load, // “读取”选项卡
+//   Option, // “设置”选项卡
+// }
+
+export const MenuPanelTagEnum = Object.freeze({
+  Save: 0,
+  Load: 1,
+  Option: 2,
+} as const);
+/**
+ * Save: 0, Load: 1, Option: 2
+ */
+export type MenuPanelTagEnumType = (typeof MenuPanelTagEnum)[keyof typeof MenuPanelTagEnum];
 
 const defaultInitState = {
   showBacklog: false,
@@ -24,7 +34,7 @@ const defaultInitState = {
   showTextBox: true,
   showControls: true,
   controlsVisibility: true,
-  currentMenuTag: MenuPanelTag.Option,
+  currentMenuTag: MenuPanelTagEnum.Option,
   titleBg: '',
   titleBgm: '',
   logoImage: [],
@@ -74,7 +84,7 @@ const GUISlice = createSlice({
      * @param state 当前GUI状态
      * @param action 改变当前选中项的Action
      */
-    setMenuPanelTag: (state, action: PayloadAction<MenuPanelTag>) => {
+    setMenuPanelTag: (state, action: PayloadAction<MenuPanelTagEnumType>) => {
       getStorage();
       state.currentMenuTag = action.payload;
     },

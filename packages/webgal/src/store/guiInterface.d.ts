@@ -1,6 +1,6 @@
 // import { IWebGalTextBoxTheme } from '@/Stage/themeInterface';
 
-/**
+/*
  * 当前Menu页面显示的Tag
  */
 // declare enum MenuPanelTag {
@@ -8,6 +8,10 @@
 //   Load, // “读取”选项卡
 //   Option, // “设置”选项卡
 // }
+/**
+ * Save: 0, Load: 1, Option: 2
+ */
+type MenuPanelTagEnumType = import('./GUIReducer').MenuPanelTagEnumType;
 
 /**
  * @interface IGuiState GUI状态接口
@@ -20,7 +24,7 @@ interface IGuiState extends IExtendingGuiState {
   showControls: boolean;
   controlsVisibility: boolean;
   // currentMenuTag: MenuPanelTag; // 当前Menu界面的选项卡
-  currentMenuTag: import('./GUIReducer').MenuPanelTag;
+  currentMenuTag: MenuPanelTagEnumType;
   showBacklog: boolean;
   titleBgm: string; // 标题背景音乐
   titleBg: string; // 标题背景图片

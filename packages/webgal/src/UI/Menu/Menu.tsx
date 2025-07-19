@@ -7,14 +7,15 @@ import { Options } from './Options/Options';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 // import { MenuPanelTag } from '@/store/guiInterface';
+import { MenuPanelTagEnum } from '@/store/GUIReducer';
 /**
  * 当前Menu页面显示的Tag
  */
-enum MenuPanelTag {
-  Save, // “保存”选项卡
-  Load, // “读取”选项卡
-  Option, // “设置”选项卡
-}
+// enum MenuPanelTag {
+//   Save, // “保存”选项卡
+//   Load, // “读取”选项卡
+//   Option, // “设置”选项卡
+// }
 
 /**
  * Menu 页面，包括存读档、选项等
@@ -25,15 +26,15 @@ const Menu: FC = () => {
   let currentTag;
   // let menuBgColor = 'linear-gradient(135deg, rgba(253,251,251,0.95) 0%, rgba(235,237,238,1) 100%)';
   switch (GUIState.currentMenuTag) {
-    case MenuPanelTag.Save:
+    case MenuPanelTagEnum.Save:
       currentTag = <Save />;
       // menuBgColor = 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)';
       break;
-    case MenuPanelTag.Load:
+    case MenuPanelTagEnum.Load:
       currentTag = <Load />;
       // menuBgColor = 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)';
       break;
-    case MenuPanelTag.Option:
+    case MenuPanelTagEnum.Option:
       currentTag = <Options />;
       // menuBgColor = 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)';
       break;

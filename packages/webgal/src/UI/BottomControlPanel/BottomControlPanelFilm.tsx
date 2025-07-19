@@ -3,7 +3,7 @@ import { switchAuto } from '@/Core/controller/gamePlay/autoPlay';
 import { switchFast } from '@/Core/controller/gamePlay/fastSkip';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { setMenuPanelTag, setVisibility } from '@/store/GUIReducer';
+import { setMenuPanelTag, setVisibility, MenuPanelTagEnum } from '@/store/GUIReducer';
 // import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
 import { backToTitle } from '@/Core/controller/gamePlay/backToTitle';
 import { useValue } from '@/hooks/useValue';
@@ -16,7 +16,7 @@ export const BottomControlPanelFilm = () => {
   const setComponentVisibility = (component: keyof componentsVisibility, visibility: boolean) => {
     dispatch(setVisibility({ component, visibility }));
   };
-  const setMenuPanel = (menuPanel: MenuPanelTag) => {
+  const setMenuPanel = (menuPanel: MenuPanelTagEnumType) => {
     dispatch(setMenuPanelTag(menuPanel));
   };
   return (
@@ -81,7 +81,7 @@ export const BottomControlPanelFilm = () => {
                 className={styles.singleButton}
                 onClick={() => {
                   showPanel.set(!showPanel.value);
-                  setMenuPanel(MenuPanelTag.Save);
+                  setMenuPanel(MenuPanelTagEnum.Save);
                   setComponentVisibility('showMenuPanel', true);
                 }}
               >
@@ -91,7 +91,7 @@ export const BottomControlPanelFilm = () => {
                 className={styles.singleButton}
                 onClick={() => {
                   showPanel.set(!showPanel.value);
-                  setMenuPanel(MenuPanelTag.Load);
+                  setMenuPanel(MenuPanelTagEnum.Load);
                   setComponentVisibility('showMenuPanel', true);
                 }}
               >
@@ -101,7 +101,7 @@ export const BottomControlPanelFilm = () => {
                 className={styles.singleButton}
                 onClick={() => {
                   showPanel.set(!showPanel.value);
-                  setMenuPanel(MenuPanelTag.Option);
+                  setMenuPanel(MenuPanelTagEnum.Option);
                   setComponentVisibility('showMenuPanel', true);
                 }}
               >

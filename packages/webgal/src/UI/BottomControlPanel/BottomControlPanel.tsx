@@ -8,7 +8,7 @@ import { easyCompile } from '@/UI/Menu/SaveAndLoad/Save/Save';
 import useFullScreen from '@/hooks/useFullScreen';
 import useSoundEffect from '@/hooks/useSoundEffect';
 import useTrans from '@/hooks/useTrans';
-import { setMenuPanelTag, setVisibility } from '@/store/GUIReducer';
+import { setMenuPanelTag, setVisibility, MenuPanelTagEnum } from '@/store/GUIReducer';
 // import { componentsVisibility, MenuPanelTag } from '@/store/guiInterface';
 import { RootState } from '@/store/store';
 import {
@@ -53,7 +53,7 @@ export const BottomControlPanel = () => {
   const setComponentVisibility = (component: keyof componentsVisibility, visibility: boolean) => {
     dispatch(setVisibility({ component, visibility }));
   };
-  const setMenuPanel = (menuPanel: MenuPanelTag) => {
+  const setMenuPanel = (menuPanel: MenuPanelTagEnumType) => {
     dispatch(setMenuPanelTag(menuPanel));
   };
 
@@ -233,7 +233,7 @@ export const BottomControlPanel = () => {
             className={styles.singleButton}
             style={{ fontSize }}
             onClick={() => {
-              setMenuPanel(MenuPanelTag.Save);
+              setMenuPanel(MenuPanelTagEnum.Save);
               setComponentVisibility('showMenuPanel', true);
               playSeClick();
             }}
@@ -246,7 +246,7 @@ export const BottomControlPanel = () => {
             className={styles.singleButton}
             style={{ fontSize }}
             onClick={() => {
-              setMenuPanel(MenuPanelTag.Load);
+              setMenuPanel(MenuPanelTagEnum.Load);
               setComponentVisibility('showMenuPanel', true);
               playSeClick();
             }}
@@ -265,7 +265,7 @@ export const BottomControlPanel = () => {
             className={styles.singleButton}
             style={{ fontSize }}
             onClick={() => {
-              setMenuPanel(MenuPanelTag.Option);
+              setMenuPanel(MenuPanelTagEnum.Option);
               setComponentVisibility('showMenuPanel', true);
               playSeClick();
             }}

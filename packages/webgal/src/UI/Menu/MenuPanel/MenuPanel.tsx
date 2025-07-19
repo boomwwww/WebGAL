@@ -4,7 +4,7 @@ import { playBgm } from '@/Core/controller/stage/playBgm';
 // import { MenuPanelTag } from '@/store/guiInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { setMenuPanelTag, setVisibility } from '@/store/GUIReducer';
+import { setMenuPanelTag, setVisibility, MenuPanelTagEnum } from '@/store/GUIReducer';
 import { backToTitle } from '@/Core/controller/gamePlay/backToTitle';
 import useTrans from '@/hooks/useTrans';
 import useSoundEffect from '@/hooks/useSoundEffect';
@@ -22,22 +22,25 @@ export const MenuPanel = () => {
   const GUIState = useSelector((state: RootState) => state.GUI);
   const dispatch = useDispatch();
   // 设置Menu按钮的高亮
-  const SaveTagOn = GUIState.currentMenuTag === MenuPanelTag.Save ? ` ${styles.MenuPanel_button_hl}` : ``;
-  const LoadTagOn = GUIState.currentMenuTag === MenuPanelTag.Load ? ` ${styles.MenuPanel_button_hl}` : ``;
-  const OptionTagOn = GUIState.currentMenuTag === MenuPanelTag.Option ? ` ${styles.MenuPanel_button_hl}` : ``;
+  const SaveTagOn = GUIState.currentMenuTag === MenuPanelTagEnum.Save ? ` ${styles.MenuPanel_button_hl}` : ``;
+  const LoadTagOn = GUIState.currentMenuTag === MenuPanelTagEnum.Load ? ` ${styles.MenuPanel_button_hl}` : ``;
+  const OptionTagOn = GUIState.currentMenuTag === MenuPanelTagEnum.Option ? ` ${styles.MenuPanel_button_hl}` : ``;
 
   // 设置Menu按钮的颜色
-  const SaveTagColor = GUIState.currentMenuTag === MenuPanelTag.Save ? `rgba(74, 34, 93, 0.9)` : `rgba(123,144,169,1)`;
-  const LoadTagColor = GUIState.currentMenuTag === MenuPanelTag.Load ? `rgba(11, 52, 110, 0.9)` : `rgba(123,144,169,1)`;
+  const SaveTagColor =
+    GUIState.currentMenuTag === MenuPanelTagEnum.Save ? `rgba(74, 34, 93, 0.9)` : `rgba(123,144,169,1)`;
+  const LoadTagColor =
+    GUIState.currentMenuTag === MenuPanelTagEnum.Load ? `rgba(11, 52, 110, 0.9)` : `rgba(123,144,169,1)`;
   const OptionTagColor =
-    GUIState.currentMenuTag === MenuPanelTag.Option ? `rgba(81, 110, 65, 0.9)` : `rgba(123,144,169,1)`;
+    GUIState.currentMenuTag === MenuPanelTagEnum.Option ? `rgba(81, 110, 65, 0.9)` : `rgba(123,144,169,1)`;
 
   // 设置Menu图标的颜色
-  const SaveIconColor = GUIState.currentMenuTag === MenuPanelTag.Save ? `rgba(74, 34, 93, 0.9)` : `rgba(123,144,169,1)`;
+  const SaveIconColor =
+    GUIState.currentMenuTag === MenuPanelTagEnum.Save ? `rgba(74, 34, 93, 0.9)` : `rgba(123,144,169,1)`;
   const LoadIconColor =
-    GUIState.currentMenuTag === MenuPanelTag.Load ? `rgba(11, 52, 110, 0.9)` : `rgba(123,144,169,1)`;
+    GUIState.currentMenuTag === MenuPanelTagEnum.Load ? `rgba(11, 52, 110, 0.9)` : `rgba(123,144,169,1)`;
   const OptionIconColor =
-    GUIState.currentMenuTag === MenuPanelTag.Option ? `rgba(81, 110, 65, 0.9)` : `rgba(123,144,169,1)`;
+    GUIState.currentMenuTag === MenuPanelTagEnum.Option ? `rgba(81, 110, 65, 0.9)` : `rgba(123,144,169,1)`;
 
   return (
     <div className={styles.MenuPanel_main}>
@@ -49,7 +52,7 @@ export const MenuPanel = () => {
         clickFunc={() => {
           playSePageChange();
           if (GUIState.showTitle) return;
-          dispatch(setMenuPanelTag(MenuPanelTag.Save));
+          dispatch(setMenuPanelTag(MenuPanelTagEnum.Save));
         }}
         tagName={t('saving.title')}
         key="saveButton"
@@ -61,7 +64,7 @@ export const MenuPanel = () => {
         tagColor={LoadTagColor}
         clickFunc={() => {
           playSePageChange();
-          dispatch(setMenuPanelTag(MenuPanelTag.Load));
+          dispatch(setMenuPanelTag(MenuPanelTagEnum.Load));
         }}
         tagName={t('loadSaving.title')}
         key="loadButton"
@@ -94,7 +97,7 @@ export const MenuPanel = () => {
         tagColor={OptionTagColor}
         clickFunc={() => {
           playSePageChange();
-          dispatch(setMenuPanelTag(MenuPanelTag.Option));
+          dispatch(setMenuPanelTag(MenuPanelTagEnum.Option));
         }}
         tagName={t('options.title')}
         key="optionButton"
