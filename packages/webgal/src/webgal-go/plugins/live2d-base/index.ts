@@ -1,4 +1,4 @@
-const l2d = (options?: { color?: string }) => {
+const live2dBase = (options?: { color?: string }) => {
   return {
     name: 'panicOverlay',
     install(app: any, options = {}) {
@@ -28,4 +28,4 @@ const l2d = (options?: { color?: string }) => {
   };
 };
 
-export default l2d;
+export { live2dBase };
