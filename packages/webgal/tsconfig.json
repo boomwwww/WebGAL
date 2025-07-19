@@ -20,6 +20,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
+      "@webgal-go/*": [
+        "./src/webgal-go/*"
+      ],
       "@/*": [
         "./src/*"
       ]

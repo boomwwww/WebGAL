@@ -57,6 +57,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@webgal-go': resolve('src/webgal-go'),
       '@': resolve('src'),
     },
   },
