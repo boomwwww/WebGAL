@@ -7,11 +7,12 @@ import { stopAll } from '@/Core/controller/gamePlay/fastSkip';
 import { useSetComponentVisibility } from '@/hooks/useHotkey';
 import { useGenSyncRef } from '@/hooks/useGenSyncRef';
 import { useMounted, useUnMounted } from '@/hooks/useLifeCycle';
-export function useUsePanic(panicButtonList: string[]) {
+export function useUsePanic(hotkeyConfig: string | string[]) {
   /**
    * Panic Button, use Esc and Backquote
    */
   function usePanic() {
+    const panicButtonList = Array.isArray(hotkeyConfig) ? hotkeyConfig : [hotkeyConfig];
     const getIsPanicButton = (ev: KeyboardEvent) =>
       !ev.isComposing && !ev.defaultPrevented && panicButtonList.includes(ev.code);
     const GUIStore = useGenSyncRef((state: RootState) => state.GUI);

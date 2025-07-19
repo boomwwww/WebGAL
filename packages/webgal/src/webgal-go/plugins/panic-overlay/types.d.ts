@@ -1,5 +1,7 @@
+type HotKeyConfig = import('@/hooks/useHotkey').HotKeyConfig;
+
 interface PanicOverlayOptions {
-  hotkeys: string[];
+  hotkeys: HotKeyConfig;
 }
 
 interface IExtendingGuiState {

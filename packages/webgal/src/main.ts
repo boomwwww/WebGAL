@@ -1,8 +1,8 @@
 import { createWebgalApp } from '@webgal-go/index';
-import panicOverlay from '@webgal-go/plugins/panic-overlay';
+import { createPanicOverlay } from '@webgal-go/plugins/panic-overlay';
 
 const webgalApp = createWebgalApp();
 
-webgalApp.use(panicOverlay({ hotkeys: ['Escape', 'Backquote'] }));
+webgalApp.use(createPanicOverlay());
 
 webgalApp.mount('#webgal-app');

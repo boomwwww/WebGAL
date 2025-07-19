@@ -4,7 +4,7 @@ import { useUsePanic, useGetIsPanicOverlayOpen } from './hooks';
 import { RootState } from '@/store/store';
 import { useGenSyncRef } from '@/hooks/useGenSyncRef';
 
-const panicOverlay = (options?: PanicOverlayOptions): WebgalPlugin<PanicOverlayOptions> => {
+const createPanicOverlay = (options?: PanicOverlayOptions): WebgalPlugin<PanicOverlayOptions> => {
   return {
     name: 'panicOverlay',
     install(app: WebgalApp, useOptions?: PanicOverlayOptions) {
@@ -24,4 +24,4 @@ const panicOverlay = (options?: PanicOverlayOptions): WebgalPlugin<PanicOverlayO
   };
 };
 
-export default panicOverlay;
+export { createPanicOverlay };

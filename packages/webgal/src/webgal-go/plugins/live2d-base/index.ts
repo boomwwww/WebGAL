@@ -1,4 +1,4 @@
-const panicOverlay = ({ key }: { key: string[] }) => {
+const l2d = (options?: { color?: string }) => {
   return {
     name: 'panicOverlay',
     install(app: any, options = {}) {
@@ -28,4 +28,4 @@ const panicOverlay = ({ key }: { key: string[] }) => {
   };
 };
 
-export default panicOverlay;
+export default l2d;
