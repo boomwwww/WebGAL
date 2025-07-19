@@ -6,7 +6,7 @@ import { useGenSyncRef } from '@/hooks/useGenSyncRef';
 
 const createPanicOverlay = (options?: PanicOverlayOptions): WebgalPlugin<PanicOverlayOptions> => {
   return {
-    name: 'panicOverlay',
+    name: 'panic-overlay',
     install(app: WebgalApp, useOptions?: PanicOverlayOptions) {
       const defaults = { hotkeys: ['Escape', 'Backquote'] };
       const config = { ...defaults, ...(options ?? {}), ...(useOptions ?? {}) };

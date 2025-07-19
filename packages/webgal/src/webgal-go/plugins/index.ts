@@ -1,5 +1,5 @@
 import { createPanicOverlay } from './panic-overlay';
-import l2d from './live2d-base';
+import { createLive2dBase } from './live2d-base';
 
 const pluginCreators = [
   {
@@ -8,7 +8,7 @@ const pluginCreators = [
   },
   {
     name: 'live2d-base',
-    create: l2d,
+    create: createLive2dBase,
   },
 ] as const;
 

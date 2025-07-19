@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { webgalStore } from '@/store/store';
 
-import { main } from './main';
+// import { main } from './main';
 
 import './styles/index.css';
 
@@ -144,7 +144,7 @@ const init = async (selctor: string) => {
         });
     }
 
-    // loadlive2d
+    // loadscript
 
     function loadScript(url: string, type?: string) {
       return new Promise((resolve, reject) => {
@@ -165,6 +165,7 @@ const init = async (selctor: string) => {
       }
     }
     loadLibScript();
+
     // enter
 
     let enterPromise = new Promise((res) => {
@@ -285,7 +286,7 @@ const init = async (selctor: string) => {
     document.querySelector(selctor),
   );
 
-  main(pluginComponents);
+  (await import('./main')).main(pluginComponents);
 };
 
 let topComponents: (JSX.Element | React.FC | ReactPortal)[] = [];

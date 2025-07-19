@@ -7,6 +7,8 @@ import { readdirSync, watch, writeFileSync } from 'fs';
 import { isEqual } from 'lodash';
 import Info from 'unplugin-info/vite';
 
+import webgalGo from './src/webgal-go/vite-plugin/index';
+
 // https://vitejs.dev/config/
 
 // @ts-ignore
@@ -52,6 +54,7 @@ export default defineConfig({
     react(),
     loadVersion(),
     Info(),
+    webgalGo(),
     // @ts-ignore
     // visualizer(),
   ],
