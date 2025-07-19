@@ -168,8 +168,10 @@ const init = async (selctor: string) => {
         // Live2D SDK の読み込みを試みます。
         // ユーザーが Live2D ライセンスを取得し、以下のディレクトリに配置した場合のみ、読み込みが成功します。
         // このプロジェクトには Live2D SDK は**含まれていません**
-        await loadScript('lib/live2d.min.js');
-        await loadScript('lib/live2dcubismcore.min.js');
+        // await loadScript('lib/live2d.min.js');
+        // await loadScript('lib/live2dcubismcore.min.js');
+        await loadScript('https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js');
+        await loadScript('https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js');
         console.log('Both Live2D scripts loaded successfully.');
       } catch (error) {
         console.error(error);

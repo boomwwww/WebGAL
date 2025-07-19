@@ -62,5 +62,28 @@ export default defineConfig({
   },
   build: {
     // sourcemap: true,
+    // rollupOptions: {
+    //   output: {
+    //     manualChunks(idPath) {
+    //       // if (!idPath.includes('node_modules')) {
+    //       //   return;
+    //       // }
+    //       // const id = idPath.replaceAll('\\', '/').replace(/.*?node_modules\//, '');
+    //       // if (id.includes('pixi-live2d-display-webgal')) {
+    //       //   return 'vendor-pixi-live2d-display';
+    //       // } else if (id.includes('react')) {
+    //       //   return 'vendor-react';
+    //       // } else if (id.includes('pixi')) {
+    //       //   if (id.includes('filter')) {
+    //       //     return 'vendor-pixi-filters';
+    //       //   } else {
+    //       //     return 'vendor-pixi-others';
+    //       //   }
+    //       // } else {
+    //       //   return 'vendor-others';
+    //       // }
+    //     },
+    //   },
+    // },
   },
 });

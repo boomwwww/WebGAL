@@ -1,5 +1,5 @@
-import { createWebgalApp } from './webgal-app/index';
-import panicOverlay from './webgal-app/plugins/panicOverlay';
+import { createWebgalApp } from './webgal-go/index';
+import panicOverlay from './webgal-go/plugins/panic-overlay';
 
 const webgalApp = createWebgalApp();
 
