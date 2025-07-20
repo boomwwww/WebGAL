@@ -9,6 +9,7 @@ interface Options {
   outputFile?: string;
   watchDebounce?: number;
   clearWhenClose?: boolean;
+  couldReload?: boolean;
 }
 
 export default function pixiPerformAutoImport(options: Options): PluginOption {
@@ -18,12 +19,13 @@ export default function pixiPerformAutoImport(options: Options): PluginOption {
     outputFile = 'initRegister.ts',
     watchDebounce = 100,
     clearWhenClose = false,
+    couldReload = false,
   } = options;
   if (!scriptDir || !managerDir) {
     throw new Error('scriptDir and managerDir are required options');
   }
   const outputPath = resolve(managerDir, outputFile);
-  const relativePath = relative(managerDir, scriptDir);
+  const relativePath = relative(managerDir, scriptDir).replace(/\\/g, '/');
   let lastFiles: string[] = [];
 
   function setInitFile() {
@@ -70,15 +72,14 @@ export default function pixiPerformAutoImport(options: Options): PluginOption {
           return;
         }
         const shouldReload = getPixiPerformScriptFiles();
-        if (shouldReload) {
-          server.ws.send({ type: 'full-reload', path: outputFile });
+        if (couldReload && shouldReload) {
+          server.ws.send({ type: 'full-reload' });
         }
       }, watchDebounce);
 
       server.watcher
         .add(scriptDir)
         .on('add', updateImports)
-        .on('change', updateImports)
         .on('unlink', updateImports)
         .on('addDir', updateImports)
         .on('unlinkDir', updateImports);
