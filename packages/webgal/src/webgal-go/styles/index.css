@@ -42,21 +42,21 @@
   z-index: 15;
   font-family: '思源宋体', Georgia, serif;
 }
-.toCenter {
+#Title_enter_text > div.toCenter {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.StartButton {
+#Title_enter_text > div.toCenter > div.StartButton {
   letter-spacing: 0.25em;
   padding: 2em 2em 2em 2em;
   text-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   transition: text-shadow 1s;
   font-size: 175%;
 }
-.link-to-github {
+#Title_enter_text > div.link-to-github {
   position: absolute;
   bottom: 1em;
   color: #999;
@@ -67,6 +67,6 @@
   flex-flow: column;
   align-items: center;
 }
-.link-to-github > div {
+#Title_enter_text > div.link-to-github > div {
   padding: 0 0 0.25em 0;
 }
