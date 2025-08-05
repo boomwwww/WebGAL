@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { createCommonParser } from '../src/lib/commonParser';
+import { createCommonParser } from '../src/lib/common';
 import { compatibleCommonParserConfig } from '../src/lib/config';
 import type { CommonParserConfig } from '../src/lib/config';
 

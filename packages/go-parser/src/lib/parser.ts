@@ -7,7 +7,7 @@ import {
   type Scene,
   type Sentence,
 } from './config';
-import { createCommonParser } from './commonParser';
+import { createCommonParser } from './common';
 import { pipe } from './utils';
 
 export type Parser = {
