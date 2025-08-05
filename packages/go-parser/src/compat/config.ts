@@ -1,0 +1,98 @@
+export enum commandType {
+  say, // 对话
+  changeBg, // 更改背景
+  changeFigure, // 更改立绘
+  bgm, // 更改背景音乐
+  video, // 播放视频
+  pixi, // pixi演出
+  pixiInit, // pixi初始化
+  intro, // 黑屏文字演示
+  miniAvatar, // 小头像
+  changeScene, // 切换场景
+  choose, // 分支选择
+  end, // 结束游戏
+  setComplexAnimation, // 动画演出
+  setFilter, // 设置效果
+  label, // 标签
+  jumpLabel, // 跳转标签
+  chooseLabel, // 选择标签
+  setVar, // 设置变量
+  if, // 条件跳转
+  callScene, // 调用场景
+  showVars,
+  unlockCg,
+  unlockBgm,
+  filmMode,
+  setTextbox,
+  setAnimation,
+  playEffect,
+  setTempAnimation,
+  comment,
+  setTransform,
+  setTransition,
+  getUserInput,
+  applyStyle,
+  wait,
+}
+
+/**
+ * 内置资源类型的枚举
+ */
+export enum fileType {
+  background,
+  bgm,
+  figure,
+  scene,
+  tex,
+  vocal,
+  video,
+}
+
+export const SCRIPT_CONFIG = [
+  { scriptString: 'intro', scriptType: commandType.intro },
+  { scriptString: 'changeBg', scriptType: commandType.changeBg },
+  { scriptString: 'changeFigure', scriptType: commandType.changeFigure },
+  { scriptString: 'miniAvatar', scriptType: commandType.miniAvatar },
+  { scriptString: 'changeScene', scriptType: commandType.changeScene },
+  { scriptString: 'choose', scriptType: commandType.choose },
+  { scriptString: 'end', scriptType: commandType.end },
+  { scriptString: 'bgm', scriptType: commandType.bgm },
+  { scriptString: 'playVideo', scriptType: commandType.video },
+  {
+    scriptString: 'setComplexAnimation',
+    scriptType: commandType.setComplexAnimation,
+  },
+  { scriptString: 'setFilter', scriptType: commandType.setFilter },
+  { scriptString: 'pixiInit', scriptType: commandType.pixiInit },
+  { scriptString: 'pixiPerform', scriptType: commandType.pixi },
+  { scriptString: 'label', scriptType: commandType.label },
+  { scriptString: 'jumpLabel', scriptType: commandType.jumpLabel },
+  { scriptString: 'setVar', scriptType: commandType.setVar },
+  { scriptString: 'callScene', scriptType: commandType.callScene },
+  { scriptString: 'showVars', scriptType: commandType.showVars },
+  { scriptString: 'unlockCg', scriptType: commandType.unlockCg },
+  { scriptString: 'unlockBgm', scriptType: commandType.unlockBgm },
+  { scriptString: 'say', scriptType: commandType.say },
+  { scriptString: 'filmMode', scriptType: commandType.filmMode },
+  { scriptString: 'callScene', scriptType: commandType.callScene },
+  { scriptString: 'setTextbox', scriptType: commandType.setTextbox },
+  { scriptString: 'setAnimation', scriptType: commandType.setAnimation },
+  { scriptString: 'playEffect', scriptType: commandType.playEffect },
+  { scriptString: 'applyStyle', scriptType: commandType.applyStyle },
+  { scriptString: 'wait', scriptType: commandType.wait },
+];
+
+export const ADD_NEXT_ARG_LIST = [
+  commandType.bgm,
+  commandType.pixi,
+  commandType.pixiInit,
+  commandType.label,
+  commandType.if,
+  commandType.miniAvatar,
+  commandType.setVar,
+  commandType.unlockBgm,
+  commandType.unlockCg,
+  commandType.filmMode,
+  commandType.playEffect,
+];
+

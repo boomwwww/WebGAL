@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "strict": true,
+    "declaration": true,
+    "types": ["node", "vitest/globals"],
+    "moduleResolution": "node"
+  },
+  "include": ["src", "tests"]
+}
