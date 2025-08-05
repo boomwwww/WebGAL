@@ -126,3 +126,37 @@ export interface IWebGALStyleObj {
   classNameStyles: Record<string, string>;
   others: string;
 }
+
+/**
+ * 单个参数接口
+ * @interface arg
+ */
+export interface arg {
+  key: string; // 参数键
+  value: string | boolean | number; // 参数值
+}
+
+/**
+ * 单条语句接口
+ * @interface ISentence
+ */
+export interface ISentence {
+  command: commandType; // 语句类型
+  commandRaw: string; // 命令的原始内容，方便调试
+  content: string; // 语句内容
+  args: Array<arg>; // 参数列表
+  sentenceAssets: Array<IAsset>; // 语句携带的资源列表
+  subScene: Array<string>; // 语句包含子场景列表
+}
+
+/**
+ * 场景接口
+ * @interface IScene
+ */
+export interface IScene {
+  sceneName: string; // 场景名称
+  sceneUrl: string; // 场景url
+  sentenceList: Array<ISentence>; // 语句列表
+  assetsList: Array<IAsset>; // 资源列表
+  subSceneList: Array<string>; // 子场景的url列表
+}

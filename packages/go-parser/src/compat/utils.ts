@@ -1,3 +1,6 @@
+import type { IScene } from './config';
+import type { Scene } from '../lib/config';
+
 /**
  * Preprocessor for scene text.
  *
@@ -263,3 +266,21 @@ function parseCSS(css: string): [Record<string, string>, string] {
 
   return [result, specialRules.trim()];
 }
+
+export const getCompatScene = (input: Scene): IScene => {
+  return {
+    sceneName: input.name,
+    sceneUrl: input.url,
+    sentenceList: input.sentenceList.map((sentence) => ({
+      command: 0,
+      commandRaw: sentence.header,
+      content: sentence.body,
+      args: sentence.attributes,
+      sentenceAssets: [],
+      subScene: [],
+      compat: sentence,
+    })),
+    assetsList: [],
+    subSceneList: [],
+  };
+};

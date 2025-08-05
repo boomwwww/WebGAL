@@ -3,6 +3,7 @@ import type {
   ConfigMap,
   ConfigItem,
   IAsset,
+  IScene,
   WebgalConfig,
   IWebGALStyleObj,
 } from './config';
@@ -10,7 +11,7 @@ import { scss2cssinjsParser } from './utils';
 import { createParser, defineParserConfig, plugins } from '../lib';
 
 import { ADD_NEXT_ARG_LIST, SCRIPT_CONFIG } from './config';
-import { sceneTextPreProcess } from './utils';
+import { sceneTextPreProcess, getCompatScene } from './utils';
 
 export class SceneParser {
   private readonly assetsPrefetcher: (assetList: IAsset[]) => void;
@@ -55,18 +56,30 @@ export class SceneParser {
    * @return 解析后的场景
    */
   parse(rawScene: string, sceneName: string, sceneUrl: string) {
-    return this.parser.parse({ str: rawScene, name: sceneName, url: sceneUrl });
+    const parsedScene = this.parser.parse({
+      str: rawScene,
+      name: sceneName,
+      url: sceneUrl,
+    });
+    return getCompatScene(parsedScene);
   }
 
   parseConfig(configText: string): WebgalConfig {
-    // todo
-    let configScene = this.parser.parse({
+    let config = this.parser.parse({
       str: configText,
       name: '@config',
       url: '@config',
     });
-    configScene = plugins.attributePlugin.parse(configScene);
-    return configScene.sentenceList.map((e) => ({
+    config = plugins.trimPlugin.parse(config);
+    config = plugins
+      .createDequotationPlugin([
+        [`\'`, `\'`],
+        [`\"`, `\"`],
+        [`\``, `\``],
+      ])
+      .parse(config);
+    config = plugins.attributePlugin.parse(config);
+    return config.sentenceList.map((e) => ({
       command: e.header,
       args: e.body
         .split('|')
