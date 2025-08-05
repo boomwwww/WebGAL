@@ -70,3 +70,22 @@ export const attributePlugin: PluginParser = {
     })),
   }),
 };
+//assetSetter
+// export const createSetAssetsPlugin = (
+//   assetSetter: (fileName: string, assetType: fileType) => string,
+// ) => ({
+//   parse: (input) => {},
+// });
+// export const createAssetsPrefetcherPlugin = (
+//   assetsPrefetcher: (assetList: IAsset[]) => void,
+// ): PluginParser => ({
+//   name: 'assetsPrefetcher',
+//   parse: (input) => {
+//     assetsPrefetcher(
+//       input.sentenceList.flatMap(
+//         (sentence) => (sentence as any).sentenceAssets,
+//       ),
+//     );
+//     return input;
+//   },
+// });

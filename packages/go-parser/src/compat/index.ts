@@ -3,7 +3,6 @@ import type {
   ConfigMap,
   ConfigItem,
   IAsset,
-  IScene,
   WebgalConfig,
   IWebGALStyleObj,
 } from './config';
@@ -27,6 +26,7 @@ export class SceneParser {
     assetSetter: (fileName: string, assetType: fileType) => string,
     ADD_NEXT_ARG_LIST: number[],
     SCRIPT_CONFIG_INPUT: ConfigItem[] | ConfigMap,
+    parserConfig?: Parameters<typeof createParser>[0],
   ) {
     this.assetsPrefetcher = assetsPrefetcher;
     this.assetSetter = assetSetter;
@@ -45,6 +45,7 @@ export class SceneParser {
         assetSetter: this.assetSetter,
         addNextArgList: this.ADD_NEXT_ARG_LIST,
         scriptConfigMap: this.SCRIPT_CONFIG_MAP,
+        parserConfig,
       }),
     );
   }
@@ -71,13 +72,15 @@ export class SceneParser {
       url: '@config',
     });
     config = plugins.trimPlugin.parse(config);
+    // config = this.parser.plugins.trimPlugin(config);
     config = plugins
       .createDequotationPlugin([
-        [`\'`, `\'`],
-        [`\"`, `\"`],
-        [`\``, `\``],
+        ["'", "'"],
+        ['"', '"'],
+        ['`', '`'],
       ])
       .parse(config);
+    // config = this.parser.plugins.dequotation(config);
     config = plugins.attributePlugin.parse(config);
     return config.sentenceList.map((e) => ({
       command: e.header,
@@ -93,10 +96,10 @@ export class SceneParser {
     return config.reduce(
       (previousValue, curr) =>
         previousValue +
-        (curr.command + `:`) +
+        (curr.command + ':') +
         curr.args.join('|') +
         curr.options.reduce((p, c) => `${p} -${c.key}=${c.value}`, '') +
-        `;\n`,
+        ';\n',
       '',
     );
   }
