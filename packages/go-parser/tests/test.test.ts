@@ -1,6 +1,8 @@
-describe("global-test", () => {
-  it("should work", () => {
-    const pipe = <T extends unknown[]>(...fns: { [K in keyof T]: (arg: any) => T[K] }): ((arg: T[0]) => T[number]) => {
+describe('global-test', () => {
+  it('should work', () => {
+    const pipe = <T extends unknown[]>(
+      ...fns: { [K in keyof T]: (arg: any) => T[K] }
+    ): ((arg: T[0]) => T[number]) => {
       return (initialValue) => fns.reduce((acc, fn) => fn(acc), initialValue);
     };
     const process = pipe(

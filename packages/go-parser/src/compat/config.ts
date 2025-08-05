@@ -95,4 +95,3 @@ export const ADD_NEXT_ARG_LIST = [
   commandType.filmMode,
   commandType.playEffect,
 ];
-

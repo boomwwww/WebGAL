@@ -1,5 +1,5 @@
 import type { ConfigMap } from '../config/scriptConfig';
-import { commandType} from '../interface/sceneInterface';
+import { commandType } from '../interface/sceneInterface';
 import type { parsedCommand } from '../interface/sceneInterface';
 
 /**

@@ -1,9 +1,9 @@
 // import uniqWith from 'lodash/uniqWith';
 import type {
   IAsset,
-  ISentence
+  ISentence,
 } from '../sceneParser/interface/sceneInterface';
-import {   commandType} from '../sceneParser/interface/sceneInterface';
+import { commandType } from '../sceneParser/interface/sceneInterface';
 import { fileType } from '../sceneParser/interface/assets';
 import type { ConfigMap } from '../sceneParser/config/scriptConfig';
 import type { CommonSentence } from './strToCommonSentenceArr';

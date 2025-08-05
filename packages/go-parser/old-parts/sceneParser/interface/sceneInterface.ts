@@ -79,13 +79,12 @@ export const CommandTypeOptions = [
   'wait',
 ] as const;
 
-export const CommandTypeEnum = Object.freeze(Object.fromEntries(
-  CommandTypeOptions.map(
-    (cmd, index) => [cmd, index]
-  )
-)) as Record<(typeof CommandTypeOptions)[number], number>;
+export const CommandTypeEnum = Object.freeze(
+  Object.fromEntries(CommandTypeOptions.map((cmd, index) => [cmd, index])),
+) as Record<(typeof CommandTypeOptions)[number], number>;
 
-export type CommandTypeEmunType = (typeof CommandTypeEnum)[keyof typeof CommandTypeEnum];
+export type CommandTypeEmunType =
+  (typeof CommandTypeEnum)[keyof typeof CommandTypeEnum];
 
 /**
  * 单个参数接口

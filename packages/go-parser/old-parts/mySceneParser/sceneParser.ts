@@ -1,7 +1,4 @@
-import type {
-  IAsset,
-  IScene,
-} from '../sceneParser/interface/sceneInterface';
+import type { IAsset, IScene } from '../sceneParser/interface/sceneInterface';
 import { commandType } from '../sceneParser/interface/sceneInterface';
 import { fileType } from '../sceneParser/interface/assets';
 import type { ConfigMap } from '../sceneParser/config/scriptConfig';
@@ -31,15 +28,11 @@ export const sceneParser = (
 ): IScene => {
   const commonSentenceArr = strToCommonSentenceArr(rawScene);
   const trimedCommonSentenceArr = commonSentenceArr.map(trimCommonSentence);
-  const {
-    sentenceList,
-    assetList,
-    subSceneList
-  } = parseSentenceArr(
+  const { sentenceList, assetList, subSceneList } = parseSentenceArr(
     trimedCommonSentenceArr,
     assetSetter,
     ADD_NEXT_ARG_LIST,
-    SCRIPT_CONFIG_MAP
+    SCRIPT_CONFIG_MAP,
   );
   assetsPrefetcher(assetList);
   return {

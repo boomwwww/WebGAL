@@ -36,7 +36,12 @@ export type Sentence = {
   position: { index: number; line: number; column: number }; // 语句起始位置在整个字符串中的索引
 };
 // 状态
-export type State = "header" | "body" | "attributeKey" | "attributeValue" | "comment";
+export type State =
+  | 'header'
+  | 'body'
+  | 'attributeKey'
+  | 'attributeValue'
+  | 'comment';
 
 // 解析上下文（集中管理所有临时状态）
 export type Context = {

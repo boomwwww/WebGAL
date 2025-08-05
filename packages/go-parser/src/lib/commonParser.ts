@@ -4,11 +4,11 @@ import {
   type CompleteCommonParserConfig,
   defaultCommonParserConfig,
   type Sentence,
-} from "./config";
-import { getPositionByIndex } from "./utils";
+} from './config';
+import { getPositionByIndex } from './utils';
 
 /** 状态 */
-type State = "header" | "body" | "attributeKey" | "attributeValue" | "comment";
+type State = 'header' | 'body' | 'attributeKey' | 'attributeValue' | 'comment';
 
 /** 当前语句的临时数据 */
 type Current = Record<State, string> & {
@@ -31,7 +31,9 @@ type Context = {
 };
 
 /** Create a common parser */
-export const createCommonParser = (commonParserConfig?: CommonParserConfig): CommonParser => {
+export const createCommonParser = (
+  commonParserConfig?: CommonParserConfig,
+): CommonParser => {
   const config = getMergedConfig(commonParserConfig);
   return {
     parse: (str) => {
@@ -40,22 +42,24 @@ export const createCommonParser = (commonParserConfig?: CommonParserConfig): Com
         stateHandlers[ctx.state](ctx); // 主循环：根据当前状态调用对应处理函数，直到指针结束
         ctx.rest = ctx.raw.slice(ctx.p);
       }
-      if (ctx.current.str !== "") {
-        ctx.current.attributeKey !== "" && pushCurrentAttribute(ctx);
+      if (ctx.current.str !== '') {
+        ctx.current.attributeKey !== '' && pushCurrentAttribute(ctx);
         pushCurrentSentence(ctx); // 处理可能遗漏的最后一条语句
       }
       return ctx.sentences;
     },
     stringify: (input, options = { raw: false }): string => {
       if (!Array.isArray(input)) return options.raw ? input.raw : input.str;
-      if (options.raw) return input.map((sentence) => sentence.raw).join("");
-      return input.map((sentence) => sentence.str).join("");
+      if (options.raw) return input.map((sentence) => sentence.raw).join('');
+      return input.map((sentence) => sentence.str).join('');
     },
   };
 };
 
 /** 合并用户配置与默认配置 */
-const getMergedConfig = (userConfig?: CommonParserConfig): CompleteCommonParserConfig => ({
+const getMergedConfig = (
+  userConfig?: CommonParserConfig,
+): CompleteCommonParserConfig => ({
   separators: {
     ...defaultCommonParserConfig.separators,
     ...userConfig?.separators,
@@ -63,28 +67,32 @@ const getMergedConfig = (userConfig?: CommonParserConfig): CompleteCommonParserC
   escapeConfigs: [
     ...(userConfig?.escapeConfigs || []),
     ...defaultCommonParserConfig.escapeConfigs.filter(
-      (defCfg) => !userConfig?.escapeConfigs?.some((usrCfg) => usrCfg.key === defCfg.key),
+      (defCfg) =>
+        !userConfig?.escapeConfigs?.some((usrCfg) => usrCfg.key === defCfg.key),
     ),
   ],
 });
 
 /** 新建上下文对象 */
-const createContext = (str: string, config: CompleteCommonParserConfig): Context => ({
+const createContext = (
+  str: string,
+  config: CompleteCommonParserConfig,
+): Context => ({
   raw: str,
-  state: "header",
+  state: 'header',
   p: 0,
   rest: str,
   sentences: [],
   current: {
-    header: "",
-    body: "",
-    attributeKey: "",
-    attributeValue: "",
-    comment: "",
+    header: '',
+    body: '',
+    attributeKey: '',
+    attributeValue: '',
+    comment: '',
     attributes: [],
-    commentStart: "",
-    str: "",
-    raw: "",
+    commentStart: '',
+    str: '',
+    raw: '',
     startIndex: 0,
   },
   config: config,
@@ -110,10 +118,11 @@ const pushSeparator = (ctx: Context, separator: string): void => {
 const pushCurrentAttribute = (ctx: Context): void => {
   ctx.current.attributes.push({
     key: ctx.current.attributeKey,
-    value: ctx.current.attributeValue === "" ? true : ctx.current.attributeValue,
+    value:
+      ctx.current.attributeValue === '' ? true : ctx.current.attributeValue,
   });
-  ctx.current.attributeKey = "";
-  ctx.current.attributeValue = "";
+  ctx.current.attributeKey = '';
+  ctx.current.attributeValue = '';
 };
 
 /** 辅助函数：将当前语句推入结果数组并重置当前语句 */
@@ -125,18 +134,21 @@ const pushCurrentSentence = (ctx: Context): void => {
     comment: ctx.current.comment,
     str: ctx.current.str,
     raw: ctx.current.raw,
-    position: { index: ctx.current.startIndex, ...getPositionByIndex(ctx.raw, ctx.current.startIndex) },
+    position: {
+      index: ctx.current.startIndex,
+      ...getPositionByIndex(ctx.raw, ctx.current.startIndex),
+    },
   });
   ctx.current = {
-    header: "",
-    body: "",
-    attributeKey: "",
-    attributeValue: "",
-    comment: "",
+    header: '',
+    body: '',
+    attributeKey: '',
+    attributeValue: '',
+    comment: '',
     attributes: [],
-    commentStart: "",
-    str: "",
-    raw: "",
+    commentStart: '',
+    str: '',
+    raw: '',
     startIndex: ctx.p,
   };
 };
@@ -144,7 +156,9 @@ const pushCurrentSentence = (ctx: Context): void => {
 /** 辅助函数，尝试处理转义 */
 const unescape = (ctx: Context): boolean => {
   const { escapeConfigs } = ctx.config;
-  const matchedEscapeConfig = escapeConfigs.find((cfg) => ctx.rest.startsWith(cfg.key));
+  const matchedEscapeConfig = escapeConfigs.find((cfg) =>
+    ctx.rest.startsWith(cfg.key),
+  );
   if (!matchedEscapeConfig) return false;
   const { value, rawValue } = matchedEscapeConfig.handle(ctx.raw, ctx.p);
   pushValue(ctx, value, rawValue);
@@ -157,65 +171,80 @@ const enterBody = (ctx: Context): boolean => {
   const matchedBodyStart = bodyStart.find((sep) => ctx.rest.startsWith(sep));
   if (!matchedBodyStart) return false;
   pushSeparator(ctx, matchedBodyStart);
-  ctx.state = "body";
+  ctx.state = 'body';
   return true;
 };
 
 /** 辅助函数：尝试进入attributeKey状态 */
 const enterAttributeKey = (ctx: Context): boolean => {
   const { attributeStart } = ctx.config.separators;
-  const matchedAttributeStart = attributeStart.find((sep) => ctx.rest.startsWith(sep));
+  const matchedAttributeStart = attributeStart.find((sep) =>
+    ctx.rest.startsWith(sep),
+  );
   if (!matchedAttributeStart) return false;
-  (ctx.state === "attributeKey" || ctx.state === "attributeValue") && pushCurrentAttribute(ctx);
+  (ctx.state === 'attributeKey' || ctx.state === 'attributeValue') &&
+    pushCurrentAttribute(ctx);
   pushSeparator(ctx, matchedAttributeStart);
-  ctx.state = "attributeKey";
+  ctx.state = 'attributeKey';
   return true;
 };
 
 /** 辅助函数：尝试进入attributeValue状态 */
 const enterAttributeValue = (ctx: Context): boolean => {
   const { attributeKeyValue } = ctx.config.separators;
-  const matchedAttributeKeyValue = attributeKeyValue.find((sep) => ctx.rest.startsWith(sep));
+  const matchedAttributeKeyValue = attributeKeyValue.find((sep) =>
+    ctx.rest.startsWith(sep),
+  );
   if (!matchedAttributeKeyValue) return false;
   pushSeparator(ctx, matchedAttributeKeyValue);
-  ctx.state = "attributeValue";
+  ctx.state = 'attributeValue';
   return true;
 };
 
 /** 辅助函数，尝试进入comment状态 */
 const enterComment = (ctx: Context): boolean => {
   const { commentSeparators } = ctx.config.separators;
-  const matchedCommentStart = commentSeparators.find((sep) => ctx.rest.startsWith(sep.start))?.start;
+  const matchedCommentStart = commentSeparators.find((sep) =>
+    ctx.rest.startsWith(sep.start),
+  )?.start;
   if (!matchedCommentStart) return false;
   ctx.current.commentStart = matchedCommentStart;
-  (ctx.state === "attributeKey" || ctx.state === "attributeValue") && pushCurrentAttribute(ctx);
+  (ctx.state === 'attributeKey' || ctx.state === 'attributeValue') &&
+    pushCurrentAttribute(ctx);
   pushSeparator(ctx, matchedCommentStart);
-  ctx.state = "comment";
+  ctx.state = 'comment';
   return true;
 };
 
 /** 辅助函数：尝试退出comment状态 */
 const exitComment = (ctx: Context): boolean => {
   const { commentSeparators } = ctx.config.separators;
-  const commentEndSeparators = commentSeparators.find((sep) => sep.start === ctx.current.commentStart);
-  const matchedCommentEnd = commentEndSeparators?.end.find((sep) => ctx.rest.startsWith(sep));
+  const commentEndSeparators = commentSeparators.find(
+    (sep) => sep.start === ctx.current.commentStart,
+  );
+  const matchedCommentEnd = commentEndSeparators?.end.find((sep) =>
+    ctx.rest.startsWith(sep),
+  );
   if (!matchedCommentEnd) return false;
-  ctx.current.commentStart = "";
+  ctx.current.commentStart = '';
   pushSeparator(ctx, matchedCommentEnd);
   pushCurrentSentence(ctx);
-  ctx.state = "header";
+  ctx.state = 'header';
   return true;
 };
 
 /** 辅助函数：尝试退出当前语句 */
 const exitSentence = (ctx: Context): boolean => {
   const { sentenceEnd } = ctx.config.separators;
-  const matchedSentenceEnd = sentenceEnd.find((sep) => ctx.rest.startsWith(sep));
+  const matchedSentenceEnd = sentenceEnd.find((sep) =>
+    ctx.rest.startsWith(sep),
+  );
   if (!matchedSentenceEnd) return false;
-  (ctx.state === "attributeKey" || ctx.state === "attributeValue") && pushCurrentAttribute(ctx);
+  (ctx.state === 'attributeKey' || ctx.state === 'attributeValue') &&
+    pushCurrentAttribute(ctx);
   pushSeparator(ctx, matchedSentenceEnd);
   pushCurrentSentence(ctx);
-  ctx.state = "header";
+  ctx.state = 'header';
   return true;
 };
 
@@ -226,7 +255,9 @@ const pushChar = (ctx: Context): boolean => {
 };
 
 /** 创建状态处理函数的工厂函数 */
-const handle = (checks: Array<(ctx: Context) => boolean>): ((ctx: Context) => void) => {
+const handle = (
+  checks: Array<(ctx: Context) => boolean>,
+): ((ctx: Context) => void) => {
   return (ctx) => {
     for (const check of checks) {
       if (check(ctx)) return;
@@ -237,8 +268,27 @@ const handle = (checks: Array<(ctx: Context) => boolean>): ((ctx: Context) => vo
 /* 状态处理映射表(每个状态对应独立处理函数) */
 const stateHandlers: Record<State, (ctx: Context) => void> = {
   header: handle([unescape, exitSentence, enterComment, enterBody, pushChar]),
-  body: handle([unescape, exitSentence, enterComment, enterAttributeKey, pushChar]),
-  attributeKey: handle([unescape, exitSentence, enterComment, enterAttributeKey, enterAttributeValue, pushChar]),
-  attributeValue: handle([unescape, exitSentence, enterComment, enterAttributeKey, pushChar]),
+  body: handle([
+    unescape,
+    exitSentence,
+    enterComment,
+    enterAttributeKey,
+    pushChar,
+  ]),
+  attributeKey: handle([
+    unescape,
+    exitSentence,
+    enterComment,
+    enterAttributeKey,
+    enterAttributeValue,
+    pushChar,
+  ]),
+  attributeValue: handle([
+    unescape,
+    exitSentence,
+    enterComment,
+    enterAttributeKey,
+    pushChar,
+  ]),
   comment: handle([unescape, exitSentence, exitComment, pushChar]),
 };

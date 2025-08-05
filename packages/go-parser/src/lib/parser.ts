@@ -6,8 +6,8 @@ import {
   defaultParserConfig,
   type Scene,
   type Sentence,
-} from "./config";
-import { createCommonParser } from "./commonParser";
+} from './config';
+import { createCommonParser } from './commonParser';
 
 export type Parser = {
   parse: (rawScene: { name: string; url: string; str: string }) => Scene;
@@ -20,13 +20,19 @@ const getMergedConfig = (userConfig?: ParserConfig): CompleteParserConfig => {
   const merged = { ...defaultParserConfig };
   if (!userConfig) return merged;
   if (userConfig.commonParserConfig) {
-    merged.commonParserConfig = { ...merged.commonParserConfig, ...userConfig.commonParserConfig };
+    merged.commonParserConfig = {
+      ...merged.commonParserConfig,
+      ...userConfig.commonParserConfig,
+    };
   }
   if (userConfig.plugins) {
     merged.plugins = [...merged.plugins, ...userConfig.plugins];
   }
   if (userConfig.pluginParsers) {
-    merged.pluginParsers = [...merged.pluginParsers, ...userConfig.pluginParsers];
+    merged.pluginParsers = [
+      ...merged.pluginParsers,
+      ...userConfig.pluginParsers,
+    ];
   }
   return merged;
 };
@@ -58,9 +64,9 @@ export const createParser = (parserConfig?: ParserConfig): Parser => {
     },
 
     stringify: (input: Scene | Array<Sentence>, options?: unknown) => {
-      if (options) return "";
+      if (options) return '';
       let arr = input;
-      let result = "";
+      let result = '';
       if (!(input instanceof Array)) {
         arr = input.sentenceList;
       }
@@ -84,13 +90,20 @@ export const createParser = (parserConfig?: ParserConfig): Parser => {
   };
 };
 
-const getPluginParser = (config: CompleteParserConfig, inputPlugin: PluginParserLike): PluginParse | undefined => {
+const getPluginParser = (
+  config: CompleteParserConfig,
+  inputPlugin: PluginParserLike,
+): PluginParse | undefined => {
   let parse;
-  if (typeof inputPlugin === "string") {
+  if (typeof inputPlugin === 'string') {
     parse = config.plugins.find((plugin) => plugin.name === inputPlugin)?.parse;
-  } else if (typeof inputPlugin === "object" && inputPlugin !== null && "parse" in inputPlugin) {
+  } else if (
+    typeof inputPlugin === 'object' &&
+    inputPlugin !== null &&
+    'parse' in inputPlugin
+  ) {
     parse = inputPlugin.parse;
-  } else if (typeof inputPlugin === "function") {
+  } else if (typeof inputPlugin === 'function') {
     parse = inputPlugin;
   }
   return parse;

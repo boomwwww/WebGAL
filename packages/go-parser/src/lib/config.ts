@@ -23,7 +23,10 @@ export interface Sentence {
 /** 普通解析器 */
 export interface CommonParser {
   parse: (str: string) => Array<Sentence>;
-  stringify: (input: Array<Sentence> | Sentence, options?: { raw: boolean }) => string;
+  stringify: (
+    input: Array<Sentence> | Sentence,
+    options?: { raw: boolean },
+  ) => string;
 }
 
 /** 普通解析器配置 */
@@ -56,31 +59,37 @@ interface EscapeConfig {
 const handleEscapeU = (str: string, index: number) => {
   // 验证索引有效性
   if (!Number.isInteger(index) || index < 0 || index >= str.length) {
-    throw new Error("Invalid index");
+    throw new Error('Invalid index');
   }
   // 检查是否以 \u \U 开头
-  if (str[index] !== "\\" || index + 1 >= str.length || !(str[index + 1] === "u" || str[index + 1] === "U")) {
-    throw new Error("Escape sequence must start with \\u");
+  if (
+    str[index] !== '\\' ||
+    index + 1 >= str.length ||
+    !(str[index + 1] === 'u' || str[index + 1] === 'U')
+  ) {
+    throw new Error('Escape sequence must start with \\u');
   }
   // 检查是否为扩展格式 \u{XXXXX}
-  if (index + 2 < str.length && str[index + 2] === "{") {
+  if (index + 2 < str.length && str[index + 2] === '{') {
     // 寻找闭合大括号
-    const closingBraceIndex = str.indexOf("}", index + 3);
+    const closingBraceIndex = str.indexOf('}', index + 3);
     if (closingBraceIndex === -1) {
       throw new Error("Incomplete extended escape sequence (missing '}')");
     }
     // 提取大括号内的十六进制字符
     const hexContent = str.slice(index + 3, closingBraceIndex);
     if (hexContent.length < 1 || hexContent.length > 6) {
-      throw new Error("Extended escape sequence must contain 1-6 hex characters");
+      throw new Error(
+        'Extended escape sequence must contain 1-6 hex characters',
+      );
     }
     if (!/^[0-9a-fA-F]+$/.test(hexContent)) {
-      throw new Error("Invalid hex characters in extended escape sequence");
+      throw new Error('Invalid hex characters in extended escape sequence');
     }
     // 解析代码点
     const codePoint = parseInt(hexContent, 16);
     if (isNaN(codePoint) || codePoint < 0x0 || codePoint > 0x10ffff) {
-      throw new Error("Invalid Unicode code point in extended sequence");
+      throw new Error('Invalid Unicode code point in extended sequence');
     }
     return {
       value: String.fromCodePoint(codePoint),
@@ -89,15 +98,19 @@ const handleEscapeU = (str: string, index: number) => {
   } else {
     // 处理传统格式 \uXXXX (4个十六进制字符)
     if (index + 6 > str.length) {
-      throw new Error("Incomplete traditional escape sequence (needs 4 hex chars)");
+      throw new Error(
+        'Incomplete traditional escape sequence (needs 4 hex chars)',
+      );
     }
     const hexContent = str.slice(index + 2, index + 6);
     if (!/^[0-9a-fA-F]{4}$/.test(hexContent)) {
-      throw new Error("Traditional escape sequence must contain 4 hex characters");
+      throw new Error(
+        'Traditional escape sequence must contain 4 hex characters',
+      );
     }
     const codePoint = parseInt(hexContent, 16);
     if (isNaN(codePoint)) {
-      throw new Error("Invalid Unicode escape sequence");
+      throw new Error('Invalid Unicode escape sequence');
     }
     return {
       value: String.fromCodePoint(codePoint),
@@ -107,88 +120,89 @@ const handleEscapeU = (str: string, index: number) => {
 };
 
 const handleEscapeX = (str: string, index: number) => {
-  if (!Number.isInteger(index) || index < 0) throw new Error("Invalid index");
-  if (index + 4 > str.length) throw new Error("Incomplete escape sequence");
+  if (!Number.isInteger(index) || index < 0) throw new Error('Invalid index');
+  if (index + 4 > str.length) throw new Error('Incomplete escape sequence');
   const cut = str.slice(index, index + 4);
   const code = parseInt(cut.slice(2), 16);
-  if (isNaN(code) || code > 0xff) throw new Error("Invalid hexadecimal escape sequence");
+  if (isNaN(code) || code > 0xff)
+    throw new Error('Invalid hexadecimal escape sequence');
   return { value: String.fromCharCode(code), rawValue: cut };
 };
 
 /** 默认转义配置 */
 export const defaultEscapeConfigs: Array<EscapeConfig> = [
   {
-    key: "\\a",
-    handle: () => ({ value: "\u0007", rawValue: "\\a" }),
+    key: '\\a',
+    handle: () => ({ value: '\u0007', rawValue: '\\a' }),
   },
   {
-    key: "\\b",
-    handle: () => ({ value: "\b", rawValue: "\\b" }),
+    key: '\\b',
+    handle: () => ({ value: '\b', rawValue: '\\b' }),
   },
   {
-    key: "\\f",
-    handle: () => ({ value: "\f", rawValue: "\\f" }),
+    key: '\\f',
+    handle: () => ({ value: '\f', rawValue: '\\f' }),
   },
   {
-    key: "\\n",
-    handle: () => ({ value: "\n", rawValue: "\\n" }),
+    key: '\\n',
+    handle: () => ({ value: '\n', rawValue: '\\n' }),
   },
   {
-    key: "\\r",
-    handle: () => ({ value: "\r", rawValue: "\\r" }),
+    key: '\\r',
+    handle: () => ({ value: '\r', rawValue: '\\r' }),
   },
   {
-    key: "\\t",
-    handle: () => ({ value: "\t", rawValue: "\\t" }),
+    key: '\\t',
+    handle: () => ({ value: '\t', rawValue: '\\t' }),
   },
   {
-    key: "\\v",
-    handle: () => ({ value: "\v", rawValue: "\\v" }),
+    key: '\\v',
+    handle: () => ({ value: '\v', rawValue: '\\v' }),
   },
   {
-    key: "\\u",
+    key: '\\u',
     handle: handleEscapeU,
   },
   {
-    key: "\\U",
+    key: '\\U',
     handle: handleEscapeU,
   },
   {
-    key: "\\x",
+    key: '\\x',
     handle: handleEscapeX,
   },
   {
-    key: "\\X",
+    key: '\\X',
     handle: handleEscapeX,
   },
   {
-    key: "\\\r\n",
-    handle: () => ({ value: "", rawValue: "\\\r\n" }),
+    key: '\\\r\n',
+    handle: () => ({ value: '', rawValue: '\\\r\n' }),
   },
   {
-    key: "\\\n",
-    handle: () => ({ value: "", rawValue: "\\\n" }),
+    key: '\\\n',
+    handle: () => ({ value: '', rawValue: '\\\n' }),
   },
   {
-    key: "\\\r",
-    handle: () => ({ value: "", rawValue: "\\\r" }),
+    key: '\\\r',
+    handle: () => ({ value: '', rawValue: '\\\r' }),
   },
   {
-    key: "\\",
+    key: '\\',
     handle: (str, index) =>
       str[index + 1] !== undefined
-        ? { value: str[index + 1], rawValue: "\\" + str[index + 1] }
-        : { value: "", rawValue: "\\" },
+        ? { value: str[index + 1], rawValue: '\\' + str[index + 1] }
+        : { value: '', rawValue: '\\' },
   },
 ];
 
 // 解析器默认配置
 export const defaultCommonParserConfig: CompleteCommonParserConfig = {
   separators: {
-    bodyStart: [":"],
-    attributeStart: [" -"],
-    attributeKeyValue: ["="],
-    commentSeparators: [{ start: ";", end: ["\r\n", "\n", "\r"] }],
+    bodyStart: [':'],
+    attributeStart: [' -'],
+    attributeKeyValue: ['='],
+    commentSeparators: [{ start: ';', end: ['\r\n', '\n', '\r'] }],
     sentenceEnd: [],
   },
   escapeConfigs: defaultEscapeConfigs,
@@ -196,11 +210,11 @@ export const defaultCommonParserConfig: CompleteCommonParserConfig = {
 
 export const compatibleCommonParserConfig: CompleteCommonParserConfig = {
   separators: {
-    bodyStart: [":"],
-    attributeStart: [" -"],
-    attributeKeyValue: ["="],
-    commentSeparators: [{ start: ";", end: ["\r\n", "\n", "\r"] }],
-    sentenceEnd: ["\r\n", "\n", "\r"],
+    bodyStart: [':'],
+    attributeStart: [' -'],
+    attributeKeyValue: ['='],
+    commentSeparators: [{ start: ';', end: ['\r\n', '\n', '\r'] }],
+    sentenceEnd: ['\r\n', '\n', '\r'],
   },
   escapeConfigs: defaultEscapeConfigs,
 };
@@ -228,7 +242,9 @@ export const defaultParserConfig: CompleteParserConfig = {
   pluginParsers: [],
 };
 
-export const defineParserConfig = (...args: unknown[]): CompleteParserConfig => {
+export const defineParserConfig = (
+  ...args: unknown[]
+): CompleteParserConfig => {
   return {
     commonParserConfig: {},
     plugins: [],

@@ -9,12 +9,12 @@
  * @returns The processed scene text
  */
 export function sceneTextPreProcess(sceneText: string): string {
-  let lines = sceneText.replaceAll("\r", "").split("\n");
+  let lines = sceneText.replaceAll('\r', '').split('\n');
 
   lines = sceneTextPreProcessPassOne(lines);
   lines = sceneTextPreProcessPassTwo(lines);
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -42,7 +42,7 @@ function sceneTextPreProcessPassOne(lines: string[]): string[] {
     }
 
     if (thisLineIsMultiline) {
-      processedLines[processedLines.length - 1] += "\\";
+      processedLines[processedLines.length - 1] += '\\';
     }
 
     processedLines.push(line);
@@ -54,12 +54,12 @@ function sceneTextPreProcessPassOne(lines: string[]): string[] {
 }
 
 function canBeMultiline(line: string): boolean {
-  if (!line.startsWith(" ")) {
+  if (!line.startsWith(' ')) {
     return false;
   }
 
   const trimmedLine = line.trimStart();
-  return trimmedLine.startsWith("|") || trimmedLine.startsWith("-");
+  return trimmedLine.startsWith('|') || trimmedLine.startsWith('-');
 }
 
 /**
@@ -68,13 +68,16 @@ function canBeMultiline(line: string): boolean {
  * @param line The line to check
  * @returns If the line should not be multiline
  */
-function shouldNotBeMultiline(line: string, lastLineIsMultiline: boolean): boolean {
+function shouldNotBeMultiline(
+  line: string,
+  lastLineIsMultiline: boolean,
+): boolean {
   if (!lastLineIsMultiline && isEmptyLine(line)) {
     return true;
   }
 
   // Custom logic: if the line contains -concat, it should not be multiline
-  if (line.indexOf("-concat") !== -1) {
+  if (line.indexOf('-concat') !== -1) {
     return true;
   }
 
@@ -82,7 +85,7 @@ function shouldNotBeMultiline(line: string, lastLineIsMultiline: boolean): boole
 }
 
 function isEmptyLine(line: string): boolean {
-  return line.trim() === "";
+  return line.trim() === '';
 }
 
 /**
@@ -97,13 +100,13 @@ function isEmptyLine(line: string): boolean {
  */
 function sceneTextPreProcessPassTwo(lines: string[]): string[] {
   const processedLines: string[] = [];
-  let currentMultilineContent = "";
+  let currentMultilineContent = '';
   let placeHolderLines: string[] = [];
 
   function concat(line: string) {
     let trimmed = line.trim();
-    if (trimmed.startsWith("-")) {
-      trimmed = " " + trimmed;
+    if (trimmed.startsWith('-')) {
+      trimmed = ' ' + trimmed;
     }
     currentMultilineContent = currentMultilineContent + trimmed;
     placeHolderLines.push(placeholderLine(line));
@@ -111,10 +114,10 @@ function sceneTextPreProcessPassTwo(lines: string[]): string[] {
 
   for (const line of lines) {
     // console.log(line);
-    if (line.endsWith("\\")) {
+    if (line.endsWith('\\')) {
       const trueLine = line.slice(0, -1);
 
-      if (currentMultilineContent === "") {
+      if (currentMultilineContent === '') {
         // first line
         currentMultilineContent = trueLine;
       } else {
@@ -124,14 +127,14 @@ function sceneTextPreProcessPassTwo(lines: string[]): string[] {
       continue;
     }
 
-    if (currentMultilineContent !== "") {
+    if (currentMultilineContent !== '') {
       // end line
       concat(line);
       processedLines.push(currentMultilineContent);
       processedLines.push(...placeHolderLines);
 
       placeHolderLines = [];
-      currentMultilineContent = "";
+      currentMultilineContent = '';
       continue;
     }
 
@@ -148,8 +151,8 @@ function sceneTextPreProcessPassTwo(lines: string[]): string[] {
  * @param content The original content on this line
  * @returns The placeholder line
  */
-function placeholderLine(content = "") {
-  return ";_WEBGAL_LINE_BREAK_" + content;
+function placeholderLine(content = '') {
+  return ';_WEBGAL_LINE_BREAK_' + content;
 }
 
 // export function sceneTextPreProcess(sceneText: string): string {

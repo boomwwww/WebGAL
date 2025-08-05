@@ -1,5 +1,8 @@
 /**  根据索引获取行和列 */
-export const getPositionByIndex = (str: string, index: number): { line: number; column: number } => {
+export const getPositionByIndex = (
+  str: string,
+  index: number,
+): { line: number; column: number } => {
   if (!str) {
     if (index !== 0) {
       throw new Error(`str is empty, and index(${index}) out of bounds`);
@@ -11,7 +14,11 @@ export const getPositionByIndex = (str: string, index: number): { line: number; 
     throw new Error(`index(${index}) out of bounds`);
   }
 
-  if (index === str.length && str[index - 1] !== "\n" && str[index - 1] !== "\r") {
+  if (
+    index === str.length &&
+    str[index - 1] !== '\n' &&
+    str[index - 1] !== '\r'
+  ) {
     throw new Error(`index(${index}) out of bounds`);
   }
 
@@ -21,14 +28,14 @@ export const getPositionByIndex = (str: string, index: number): { line: number; 
   let column = 1;
 
   while (p < index) {
-    if (p !== 0 && str[p - 1] === "\r" && str[p] === "\n") {
+    if (p !== 0 && str[p - 1] === '\r' && str[p] === '\n') {
       // 处理 \r\n 换行符组合
       line++;
       column = 1;
-    } else if (str[p] === "\r" && str[p + 1] === "\n") {
+    } else if (str[p] === '\r' && str[p + 1] === '\n') {
       // 处理 \r\n 换行符组合
       column++;
-    } else if (str[p] === "\n" || str[p] === "\r") {
+    } else if (str[p] === '\n' || str[p] === '\r') {
       // 处理其他换行符（\n 或 \r）
       line++;
       column = 1;
@@ -53,6 +60,6 @@ export const pipe = <T extends unknown[]>(
 const process = pipe(
   (x: number) => x * 2,
   (x) => x.toString(),
-  (s) => `Result: ${s}`
+  (s) => `Result: ${s}`,
 );
-process(5)
+process(5);

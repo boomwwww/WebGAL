@@ -1,12 +1,10 @@
-
 import type {
- 
   IAsset,
-  ISentence
+  ISentence,
 } from '../sceneParser/interface/sceneInterface';
 import { commandType } from '../sceneParser/interface/sceneInterface';
 import { fileType } from '../sceneParser/interface/assets';
-import type{ ConfigMap } from '../sceneParser/config/scriptConfig';
+import type { ConfigMap } from '../sceneParser/config/scriptConfig';
 import type { CommonSentence } from './strToCommonSentenceArr';
 export const parseSentence = (
   sentence: CommonSentence,
@@ -14,9 +12,9 @@ export const parseSentence = (
   ADD_NEXT_ARG_LIST: Array<commandType>,
   SCRIPT_CONFIG_MAP: ConfigMap,
 ): {
-  parsedSentence: ISentence,
-  assets: Array<IAsset>,
-  subScenes: Array<string>,
+  parsedSentence: ISentence;
+  assets: Array<IAsset>;
+  subScenes: Array<string>;
 } => {
   let parsedSentence: ISentence = {
     command: 0, // 语句类型
@@ -36,8 +34,7 @@ export const parseSentence = (
     parsedSentence.args.push({ key: 'next', value: true });
   } else if (sentence.header !== '' && sentence.body === '') {
     // 连续对话
-
   }
 
   return { parsedSentence, assets, subScenes };
-}
+};

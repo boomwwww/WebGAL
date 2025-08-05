@@ -1,9 +1,18 @@
-import { fileType } from "./config";
-import type { ConfigMap, ConfigItem, IAsset, WebgalConfig, IWebGALStyleObj } from "./types";
+import { fileType } from './config';
+import type {
+  ConfigMap,
+  ConfigItem,
+  IAsset,
+  WebgalConfig,
+  IWebGALStyleObj,
+} from './types';
 
 export class SceneParser {
   private readonly assetsPrefetcher: (assetList: IAsset[]) => void;
-  private readonly assetSetter: (fileName: string, assetType: fileType) => string;
+  private readonly assetSetter: (
+    fileName: string,
+    assetType: fileType,
+  ) => string;
   private readonly ADD_NEXT_ARG_LIST: number[];
   private readonly SCRIPT_CONFIG_MAP: ConfigMap;
   constructor(
@@ -51,10 +60,15 @@ export class SceneParser {
     return config.reduce(
       (previousValue, curr) =>
         previousValue +
-        `${curr.command}:${curr.args.join("|")}${
-          curr.options.length <= 0 ? "" : curr.options.reduce((p, c) => p + " -" + c.key + "=" + c.value, "")
+        `${curr.command}:${curr.args.join('|')}${
+          curr.options.length <= 0
+            ? ''
+            : curr.options.reduce(
+                (p, c) => p + ' -' + c.key + '=' + c.value,
+                '',
+              )
         };\n`,
-      "",
+      '',
     );
   }
 

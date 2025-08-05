@@ -1,4 +1,4 @@
-import { commandType, fileType } from "./config";
+import { commandType, fileType } from './config';
 
 export type ConfigItem = { scriptString: string; scriptType: commandType };
 export type ConfigMap = Map<string, ConfigItem>;
