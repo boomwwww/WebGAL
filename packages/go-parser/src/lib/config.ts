@@ -12,7 +12,7 @@ export interface Sentence {
   body: string; // 语句体
   attributes: Array<{
     key: string; // 属性键
-    value: string | true; // 属性值
+    value: string | boolean | number; // 属性值
   }>;
   comment: string; // 语句注释
   str: string; // 语句字符串(转义后)

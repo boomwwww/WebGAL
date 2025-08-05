@@ -6,6 +6,8 @@ import type {
   WebgalConfig,
   IWebGALStyleObj,
 } from './types';
+import { scss2cssinjsParser } from './utils';
+import { createParser, defineParserConfig, plugins } from '../lib';
 
 export class SceneParser {
   private readonly assetsPrefetcher: (assetList: IAsset[]) => void;
@@ -15,6 +17,7 @@ export class SceneParser {
   ) => string;
   private readonly ADD_NEXT_ARG_LIST: number[];
   private readonly SCRIPT_CONFIG_MAP: ConfigMap;
+  private readonly parser: ReturnType<typeof createParser>;
   constructor(
     assetsPrefetcher: (assetList: IAsset[]) => void,
     assetSetter: (fileName: string, assetType: fileType) => string,
@@ -32,6 +35,14 @@ export class SceneParser {
     } else {
       this.SCRIPT_CONFIG_MAP = SCRIPT_CONFIG_INPUT;
     }
+    this.parser = createParser(
+      defineParserConfig({
+        assetsPrefetcher: this.assetsPrefetcher,
+        assetSetter: this.assetSetter,
+        addNextArgList: this.ADD_NEXT_ARG_LIST,
+        scriptConfigMap: this.SCRIPT_CONFIG_MAP,
+      }),
+    );
   }
   /**
    * 解析场景
@@ -41,33 +52,35 @@ export class SceneParser {
    * @return 解析后的场景
    */
   parse(rawScene: string, sceneName: string, sceneUrl: string) {
-    return sceneParser(
-      rawScene,
-      sceneName,
-      sceneUrl,
-      this.assetsPrefetcher,
-      this.assetSetter,
-      this.ADD_NEXT_ARG_LIST,
-      this.SCRIPT_CONFIG_MAP,
-    );
+    return this.parser.parse({ str: rawScene, name: sceneName, url: sceneUrl });
   }
 
-  parseConfig(configText: string) {
-    return configParser(configText);
+  parseConfig(configText: string): WebgalConfig {
+    // todo
+    let configScene = this.parser.parse({
+      str: configText,
+      name: '@config',
+      url: '@config',
+    });
+    configScene = plugins.attributePlugin.parse(configScene);
+    return configScene.sentenceList.map((e) => ({
+      command: e.header,
+      args: e.body
+        .split('|')
+        .map((e) => e.trim())
+        .filter((e) => e !== ''),
+      options: e.attributes,
+    }));
   }
 
   stringifyConfig(config: WebgalConfig) {
     return config.reduce(
       (previousValue, curr) =>
         previousValue +
-        `${curr.command}:${curr.args.join('|')}${
-          curr.options.length <= 0
-            ? ''
-            : curr.options.reduce(
-                (p, c) => p + ' -' + c.key + '=' + c.value,
-                '',
-              )
-        };\n`,
+        (curr.command + `:`) +
+        curr.args.join('|') +
+        curr.options.reduce((p, c) => p + ' -' + c.key + '=' + c.value, '') +
+        `;\n`,
       '',
     );
   }

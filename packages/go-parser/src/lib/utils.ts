@@ -51,15 +51,9 @@ export const getPositionByIndex = (
   return { line, column };
 };
 
-/** 函数管道 */ // 类型安全的管道组合
-export const pipe = <T extends unknown[]>(
-  ...fns: { [K in keyof T]: (arg: any) => T[K] }
-): ((arg: T[0]) => T[number]) => {
+/** 函数管道 */
+export const pipe = <T>(
+  ...fns: Array<(arg: T, ...rest: Array<unknown>) => T>
+): ((arg: T, ...rest: Array<unknown>) => T) => {
   return (initialValue) => fns.reduce((acc, fn) => fn(acc), initialValue);
 };
-const process = pipe(
-  (x: number) => x * 2,
-  (x) => x.toString(),
-  (s) => `Result: ${s}`,
-);
-process(5);

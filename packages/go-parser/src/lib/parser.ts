@@ -8,6 +8,7 @@ import {
   type Sentence,
 } from './config';
 import { createCommonParser } from './commonParser';
+import { pipe } from './utils';
 
 export type Parser = {
   parse: (rawScene: { name: string; url: string; str: string }) => Scene;
@@ -44,23 +45,18 @@ export const createParser = (parserConfig?: ParserConfig): Parser => {
   const pluginParseList = config.pluginParsers
     .map((plugin) => getPluginParser(config, plugin))
     .filter((p) => p !== undefined);
-  const pluginParse = (input: Scene) => {
-    for (const plugin of pluginParseList) {
-      input = plugin(input);
-    }
-    return input; // todo: 这里需要改成函数管道的写法
-  };
+  const pluginParse = pipe(...pluginParseList);
   return {
     parse: (rawScene) => {
       const { name, url, str } = rawScene;
-      const commonStenceList = commonParser.parse(str);
-      const inputScene: Scene = {
+      const initialStenceList = commonParser.parse(str);
+      const initialScene: Scene = {
         name: name,
         url: url,
-        sentenceList: commonStenceList,
+        sentenceList: initialStenceList,
         raw: str,
       };
-      return pluginParse(inputScene);
+      return pluginParse(initialScene);
     },
 
     stringify: (input: Scene | Array<Sentence>, options?: unknown) => {
