@@ -8,7 +8,7 @@
     },
     "include": [
       "vite.config.ts",
-      "src/webgal-go/vite-plugin",
+      "src/webgal-app/vite-plugin",
       "src/plugins",
     ]
 }

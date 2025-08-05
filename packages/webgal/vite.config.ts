@@ -2,11 +2,11 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import loadVersion from 'vite-plugin-package-version';
 import { resolve, relative } from 'path';
-import { visualizer } from 'rollup-plugin-visualizer';
+// import { visualizer } from 'rollup-plugin-visualizer';
 import Info from 'unplugin-info/vite';
 import pixiPerformAutoImport from './src/plugins/pixi-perform-auto-import';
 
-import webgalGo from './src/webgal-go/vite-plugin/index';
+import webgalGo from './src/webgal-app/vite-plugin/index';
 
 // https://vitejs.dev/config/
 
@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@webgal-go': resolve('src/webgal-go'),
+      '@webgal-app': resolve('src/webgal-app'),
       '@': resolve('src'),
     },
   },
