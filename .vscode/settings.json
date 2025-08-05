@@ -7,6 +7,7 @@
     "release-to-server.sh": "*.sh",
     "index.js":"index*",
     "rollup.config.js": "*config.js,*config.json,*rc",
+    "tsdown.config.js": "*config.js,*config.json,*rc",
     "vite.config.ts": "*config.js,*config.json,*rc,.eslint*,eslint*,.prettier*,prettier*"
   }
 }
