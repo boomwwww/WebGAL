@@ -1877,6 +1877,11 @@
     loupe "^3.1.4"
     tinyrainbow "^2.0.0"
 
+"@webgal-go/parser@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@webgal-go/parser/-/parser-0.0.8.tgz#c9a83657774ac964471bae5745b608388acaa3f4"
+  integrity sha512-2cGtw86BLXZPd4pInYXWCczFF4IYl0IxfJsLs3BzDf8y9UnZ+mbRSI4zV2iXdpt0ziNIHhgYAWBT0k2IWDuPrA==
+
 accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
@@ -6565,7 +6570,7 @@ vite-plugin-package-version@^1.0.2:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vitest@0.28.5, vitest@^0.28.5:
+vitest@0.28.5:
   version "0.28.5"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.28.5.tgz#94410a8924cd7189e4f1adffa8c5cde809cbf2f9"
   integrity sha512-pyCQ+wcAOX7mKMcBNkzDwEHRGqQvHUl0XnoHR+3Pb1hytAHISgSxv9h0gUiSiYtISXUU3rMrKiKzFYDrI6ZIHA==
