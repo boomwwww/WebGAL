@@ -1,0 +1,7 @@
+{
+  "table": [
+    { "templateName": "default", "path": "./Default Template/template.json" },
+    { "templateName": "black", "path": "./WebGAL Black/template.json" }
+  ],
+  "default": "black"
+}

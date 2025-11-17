@@ -52,3 +52,22 @@ function useRigisterStyleUpdate(callback: Function) {
     return () => WebGAL.events.styleUpdate.off(handler);
   }, []);
 }
+
+interface IStyleTemplateTable {
+  table: Array<{ templateName: string; path: string }>;
+  default: string;
+}
+
+export const styleTemplateTable: IStyleTemplateTable = await (async () => {
+  try {
+    const resp = await axios.get(`game/template/templateTable.json`);
+    logger.info(`获取样式模板表成功${JSON.stringify(resp.data)}`);
+    return resp.data;
+  } catch (e) {
+    logger.warn(`获取样式模板表失败${e}`);
+    return {
+      table: [{ templateName: 'default', path: './template.json' }],
+      default: 'default',
+    };
+  }
+})();
